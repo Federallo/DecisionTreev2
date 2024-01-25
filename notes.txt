@@ -1,0 +1,3 @@
+25/01/204
+value_counts() (for pandas' dataframes) is used to count how many unique values are in a column and the amount of each
+https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html pandas dataframe documentation
