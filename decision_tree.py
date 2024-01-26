@@ -10,7 +10,6 @@ class Node:
     def __init__(self, name, branch, type_name):
         self.attribute_name = name # attribute name for the node
         self.branch = branch  # list of node's branches (attribute's possible values)
-        #self.parent = none # node's parent TODO maybe not needed because tree doesnt need to backtrack
         self.type = type_name # to distinguish between node and leafs
 
 
@@ -18,36 +17,37 @@ class Node:
 class DecisionTree:
 
     # initialising decision tree
-    def __init__(self, examples):
-        self.depth = 0
+    def __init__(self, examples, P, M):
+        self.min_examples = M
+        self.max_depth = P
+        self.depth = 0 # TODO find where to increase tree depth
         self.root = self.decision_tree_learning(examples, attributes, {}) # parents_examples is empty because we are starting from an empty tree
 
     # defining recursive decision tree learning algorithm
     def decision_tree_learning(examples, attributes, parent_examples):
         # checks if there are no examples left
-        if examples.empty:
+        if examples.empty or self.depth == self.max_depth or len(examples) < self.min_examples:
             return self.plurality_value(parent_examples.targets)
-        # checks if all examples have the same outcome
-        else if examples.targets.value_counts() == 1:
+        # checks if the current examples have the same outcome
+        elif examples.targets.value_counts() == 1:
             return examples.targets.value_counts() # TODO must be changed to the effective outcome name
         # checks if there are no attributes left in the examples
-        if examples.features.value_counts() is empty:
+        elif examples.features.value_counts() is empty:
             return self.plurality_value(examples.targets)
         # defining the most important attribute and adding it to the tree as a node
         else:
             A = max_importance(examples)# here we choose the most important attribute among the others
-            tree = Node(#A.name, A.branch, node)
+            #tree = Node(#A.name, A.branch, node)
             for values in A:
                 # exs = e must belong to examples and e.A=v # TODO find the meaning of this line
                 subtree = self.decision_tree_learning(exs, attributes-A, examples)# FIXME
                 # TODO add a branch to tree with label (A=v) and as subtree 'subtree'
-    return tree
+        return tree
                 
     # defining the function that selects the most common output value
-    # FIXME must count only the most common outcome among the examples
     def plurality_value(examples):
         most_common = 0
-        for unique_value in exaples.value_counts():
+        for unique_value in list(exaples.value_counts()):
             if unique_value > most_common:
                 most_common = unique_value
         return most_common
@@ -68,7 +68,7 @@ class DecisionTree:
     # defining the entropy of a set
     def entropy(set):
         total = 0
-        for i = 0 to len(set.value_counts())-1 #the indices of values
+        for i in len(set.value_counts()): #the indices of values
             total -= len(set[i])/len(set)*math.log2(len(set[i])/len(set)) # where the fraction represent the distribution of datasets' values
                                                                           # (which are targets' or attributes')
         return total
@@ -77,9 +77,10 @@ class DecisionTree:
 iris = fetch_ucirepo(id=53)
 x = iris.data.features
 y = iris.data.targets
-print(y)
+#tmp = list(x)
+#print(x[tmp[1]].value_counts())
 
-#print(len(x))
-#print(iris.data.features)
-#print(iris.data.targets)
-
+total = 0
+for values in list(y.value_counts()):
+    total += values
+print(total)
