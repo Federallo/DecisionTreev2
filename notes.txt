@@ -1,3 +1,9 @@
 25/01/204
-value_counts() (for pandas' dataframes) is used to count how many unique values are in a column and the amount of each
+value_counts() (for pandas' dataframes) is used to count how many unique values are in a column and the amount of each. if you list
+them it gives you only the amount
 https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html pandas dataframe documentation
+26/01/2024
+list(x.data.features) gives the list of attributes
+x[list(x.data.features)[i]].values gives the value of the i-th column (where is should be the real name of the column)
+list(x.data) gives ids,features, targets, headers
+x[x[i]]==4.9].values gives the list of the column with only the value 4.9
