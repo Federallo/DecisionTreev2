@@ -5,13 +5,17 @@ import pandas as pd
 # other libraries
 import math
 
+# defining branch data class in order to contain the branch's label and it subtree
+class Branch:
+    def __init__(self):
+        self.label = none
+        self.subtree = none
+
 # defining tree nodes data structure
 class Node:
-    def __init__(self, name, branch, type_name):
+    def __init__(self, name):
         self.attribute_name = name # attribute name for the node
-        self.branch = branch  # list of node's branches (attribute's possible values)
-        self.type = type_name # to distinguish between node and leafs
-
+        self.branch = Branch() # list of node's branches (attribute's possible values)
 
 # defining the decision tree data structure 
 class DecisionTree:
@@ -30,18 +34,20 @@ class DecisionTree:
             return self.plurality_value(parent_examples.targets)
         # checks if the current examples have the same outcome
         elif examples.targets.value_counts() == 1:
-            return examples.targets.value_counts() # TODO must be changed to the effective outcome name
+            return list(examples.targets.value_counts())[0] # gives the only target in common between the examples
         # checks if there are no attributes left in the examples
         elif examples.features.value_counts() is empty:
             return self.plurality_value(examples.targets)
         # defining the most important attribute and adding it to the tree as a node
         else:
-            A = max_importance(examples)# here we choose the most important attribute among the others
-            #tree = Node(#A.name, A.branch, node)
-            for values in A:
-                # exs = e must belong to examples and e.A=v # TODO find the meaning of this line
-                subtree = self.decision_tree_learning(exs, attributes-A, examples)# FIXME
-                # TODO add a branch to tree with label (A=v) and as subtree 'subtree'
+            A = max_importance(examples) # here we choose the most important attribute among the others
+            tree = Node(list(A)[0]) # list(A)[0] gives the attribute name
+            for value in list(A[list(A)[0]].drop_duplicates()): # gives the set of attribute values
+                exs = examples[examples[list(A)[0]]==value]# selects the examples which have the attribute's value 'value'
+                subtree = self.decision_tree_learning(exs, attributes-A, examples)
+                # FIXME maybe this one can be done better
+                tree.branch.label.append(values)# FIXME maybe it needs also the attribute's name
+                tree.branch.subtree.append(subtree)
         return tree
                 
     # defining the function that selects the most common output value
@@ -79,8 +85,8 @@ x = iris.data.features
 y = iris.data.targets
 #tmp = list(x)
 #print(x[tmp[1]].value_counts())
-
-total = 0
-for values in list(y.value_counts()):
-    total += values
-print(total)
+print(list(y))
+#total = 0
+#for values in list(y.value_counts()):
+#    total += values
+#print(total)
