@@ -44,7 +44,7 @@ class DecisionTree:
             tree = Node(list(A)[0]) # list(A)[0] gives the attribute name
             for value in list(A[list(A)[0]].drop_duplicates()): # gives the set of attribute values
                 exs = update_examples(examples, A, value) #examples.features[examples.features[list(A)[0]]==value]# selects the examples which have the attribute's value 'value'
-                subtree = self.decision_tree_learning(exs, examples)
+                subtree = self.decision_tree_learning(exs, attributes.remove(list(A)[0]), examples)
                 # FIXME maybe this one can be done better
                 tree.branch.label.append(values)
                 tree.branch.subtree.append(subtree)
