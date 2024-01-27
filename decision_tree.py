@@ -53,11 +53,13 @@ class DecisionTree:
                 
     # defining the function that selects the most common output value
     def plurality_value(examples):
-        most_common = 0
-        for unique_value in list(exaples.value_counts()):
-            if unique_value > most_common:
-                most_common = unique_value
-        return most_common
+        most_count = 0
+        most_name = none
+        for i in range (0, len(list(exaples.value_counts()))): # list(examples.value_counts()) gives the list of amount per value 
+            if list(examples.value_counts())[i] > most_count:
+                most_count = list(examples.value_counts())[i]
+                most_name = list(example[list(examples)[0]].drop_duplicates())[i]
+        return most_name
 
     # defining the most important attribute among the other by using information gain
     def max_importance(examples):
