@@ -72,11 +72,11 @@ class DecisionTree:
         return current_attribute
     
     # defining the entropy of a set
-    def entropy(set):
+    def entropy(examples_set):
         total = 0
-        for i in len(set.value_counts()): #the indices of values
-            total -= len(set[i])/len(set)*math.log2(len(set[i])/len(set)) # where the fraction represent the distribution of datasets' values
-                                                                          # (which are targets' or attributes')
+        for i in len(examples_set.value_counts()): #the indices of values
+            total -= len(examples_set[i])/len(examples_set)*math.log2(len(examples_set[i])/len(examples_set)) # where the fraction represent the distribution of datasets' values
+                                                                                                              # (which are targets' or attributes')
         return total
 
 # TODO add this part into another file. Tree class definitions must be in a separate file and every test for dataset must be done in a different file
@@ -85,7 +85,7 @@ x = iris.data.features
 y = iris.data.targets
 #tmp = list(x)
 #print(x[tmp[1]].value_counts())
-print(list(y))
+print(list(x['petal length'].value_counts()))
 #total = 0
 #for values in list(y.value_counts()):
 #    total += values
