@@ -32,4 +32,11 @@ list of attributes which have that exact value      sepal length  sepal width  p
 123           6.3          2.7           4.9          1.8
 127           6.1          3.0           4.9          1.8
 
-how to remove examples from dataframe: fetch the ids from features, next remove them from features and targets
+how to remove examples from dataframe: fetch the ids (using index) from features, next remove them from features and targets
+print("filtering examples by attribute's value (gives the ids)")
+print(list(iris.data.features[x['petal length']==4.9].index))
+
+print(list(x[x['petal length'] == 4.9].value_counts()))
+outcome
+[1, 1, 1, 1, 1]
+
