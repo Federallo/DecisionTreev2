@@ -8,3 +8,28 @@ x[list(x.data.features)[i]].values gives the value of the i-th column (where is 
 list(x.data) gives ids,features, targets, headers
 x[x[i]]==4.9].values gives the list of the example with only the value 4.9 at the i-th column
 list(iris.data.target['class'].drop_duplicates() gives the three type of iris (virginica, versicolor, setosa)
+27/01/2024
+print("attributes names list", list(iris.data.features))
+print("check if dataset is empty ", iris.data.features.empty)
+print("length examples (row counts) ", len(iris.data.features))
+print("only target name in common ", list(y[list(y)[0]].drop_duplicates())[0])
+print("attribute name ", list(y)[0])
+print("attribute values", list(y[list(y)[0]].drop_duplicates()))
+print("list of attributes which have that exact value", x[x['petal length']==4.9])
+
+outcomes
+
+attributes names list ['sepal length', 'sepal width', 'petal length', 'petal width']
+check if dataset is empty  False
+length examples (row counts)  150
+only target name in common  Iris-setosa
+attribute name  class
+attribute values ['Iris-setosa', 'Iris-versicolor', 'Iris-virginica']
+list of attributes which have that exact value      sepal length  sepal width  petal length  petal width
+52            6.9          3.1           4.9          1.5
+72            6.3          2.5           4.9          1.5
+121           5.6          2.8           4.9          2.0
+123           6.3          2.7           4.9          1.8
+127           6.1          3.0           4.9          1.8
+
+how to remove examples from dataframe: fetch the ids from features, next remove them from features and targets
