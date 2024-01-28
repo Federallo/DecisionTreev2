@@ -33,7 +33,7 @@ class DecisionTree:
         if examples.features.empty or self.depth == self.max_depth or len(examples.features) < self.min_examples:
             return self.plurality_value(parent_examples.targets)
         # checks if the current examples have the same outcome
-        elif examples.targets.value_counts() == 1:
+        elif len(list(examples.targets.value_counts())) == 1:
             return list(examples.targets.value_counts())[0] # gives the only target in common between the examples
         # checks if there are no attributes left in the examples
         elif attributes is empty:
