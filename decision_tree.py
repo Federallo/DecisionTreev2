@@ -29,13 +29,13 @@ class DecisionTree:
 
     # defining recursive decision tree learning algorithm
     def decision_tree_learning(self, examples, attributes, parent_examples):
-        # checks if there are no examples left or the tree have reached a certain depth or there are an amount of examples are less than a specific value
+        # checking if there are no examples left or the tree have reached a certain depth or there are an amount of examples are less than a specific value
         if examples.features.empty or self.depth == self.max_depth or len(examples.features) < self.min_examples:
             return self.plurality_value(parent_examples.targets)
-        # checks if the current examples have the same outcome
+        # checking if the current examples have the same outcome
         elif len(list(examples.targets.value_counts())) == 1:
             return list(examples.targets.value_counts())[0] # gives the only target in common between the examples
-        # checks if there are no attributes left in the examples
+        # checking if there are no attributes left in the examples
         elif attributes is empty:
             return self.plurality_value(examples.targets)
         # defining the most important attribute and adding it to the tree as a node
@@ -64,11 +64,17 @@ class DecisionTree:
     # defining the most important attribute among the other by using information gain
     def max_importance(self, examples):
         entropy_set = entropy(examples.targets) # computing the entropy of the entire set
-        current_attribute = list(examples.features)[0]
-        information_gain = entropy_set - entropy(current_attribute) # information gain of the first attribute
-        # determing the attribute with highest information gain
+        current_attribute = None
+        information_gain = -1 # we set to -1 because the information gain value lise withnin the range 0-1. By doing so. We set the information gain of the first attribute
+                              # in the for cycle
+        # determining the attribute with highest information gain
         for attribute in list(examples.features):
-            current = entropy_set - entropy(example.features[attribute]) # computing the entropy of single attributes
+            # computing the right member of information gain function
+            right_member = 0
+            for i in list(examples.features[attribute].drop_duplicates()):
+                right_member -= len(examples.features[example.features[attribute] == i])/len(example.features) \
+                    *entropy(examples.features[example.features[attribute] == i)
+            current = entropy_set + right_member # computing the information gain of each attribute
             if current > information_gain:
                 information_gain = current
                 current_attribute = attribute
