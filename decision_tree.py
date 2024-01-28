@@ -4,12 +4,14 @@ import pandas as pd
 
 # other libraries
 import math
+import networkx
+import matplotlib.pyplot as plt
 
 # defining branch data class in order to contain the branch's label and it subtree
 class Branch:
     def __init__(self):
-        self.label = none
-        self.subtree = none
+        self.label = None
+        self.subtree = None
 
 # defining tree nodes data structure
 class Node:
@@ -36,12 +38,13 @@ class DecisionTree:
         elif len(list(examples.targets.value_counts())) == 1:
             return list(examples.targets.value_counts())[0] # gives the only target in common between the examples
         # checking if there are no attributes left in the examples
-        elif attributes:
+        elif not attributes:
             return self.plurality_value(examples.targets)
         # defining the most important attribute and adding it to the tree as a node
         else:
-            A = max_importance(examples) # here we choose the most important attribute among the others
+            A = self.max_importance(examples) # here we choose the most important attribute among the others
             tree = Node(list(A)[0]) # list(A)[0] gives the attribute name
+            print(list(A)[0])
             for value in list(A[list(A)[0]].drop_duplicates()): # gives the set of attribute values
                 exs = update_examples(examples, A, value) # selects the examples which have the attribute's value 'value'
                 subtree = self.decision_tree_learning(exs, attributes.remove(list(A)[0]), examples)
@@ -63,7 +66,7 @@ class DecisionTree:
 
     # defining the most important attribute among the other by using information gain
     def max_importance(self, examples):
-        entropy_set = entropy(examples.targets) # computing the entropy of the entire set
+        entropy_set = self.entropy(examples.targets) # computing the entropy of the entire set
         current_attribute = None
         information_gain = -1 # we set to -1 because the information gain value lise withnin the range 0-1. By doing so. We set the information gain of the first attribute
                               # in the for cycle
@@ -72,8 +75,8 @@ class DecisionTree:
             # computing the right member of information gain function
             right_member = 0
             for i in list(examples.features[attribute].drop_duplicates()):
-                right_member -= len(examples.features[example.features[attribute] == i])/len(example.features) \
-                    *entropy(examples.features[example.features[attribute] == i])
+                right_member -= len(examples.features[examples.features[attribute] == i])/len(examples.features) \
+                    *self.entropy(examples.features[examples.features[attribute] == i])
             current = entropy_set + right_member # computing the information gain of each attribute
             if current > information_gain:
                 information_gain = current
@@ -96,7 +99,26 @@ class DecisionTree:
         filtered_examples = pd.concat([examples.features.loc[ids], examples.targets.loc[ids]], keys = ['features', 'targets'])
         filtered_examples.features = filtered_examples['features']
         filtered_examples.targets = filtered_examples['targets']
+        print(filtered_examples)
         return filtered_examples
+
+
+#plotting tree
+T = networkx.Graph()
+# defining plotting tree function
+def plot_tree(decision_tree, target): # where target is the list of the possible dataset's targets
+    T.add_node(decision_tree.attribute_name)
+    for i in range (0, decision_tree.brarch-1):
+        # add directly target name if the are no subtrees
+        if attributes.subtree[i] in target:
+            T.add_node(attributes.subtree[i])
+            T.add_edge(decision_tree.attribute_name, attribute.subtree[i], weight = attribute.label[i])
+        # recursive call for the subtrees
+        else:
+            plot_tree(attributes.subtree, target)
+        
+    
+
 
 
 # TODO add this part into another file. Tree class definitions must be in a separate file and every test for dataset must be done in a different file
@@ -104,3 +126,10 @@ iris = fetch_ucirepo(id=53)
 dataset = iris.data
 
 decision_tree = DecisionTree(dataset, 100, 0)
+
+# creating tree
+plot_tree(decision_tree.root, list(dataset.targets))
+
+# printing tree
+networkx.draw(g1)
+plt.show()
