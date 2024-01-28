@@ -36,7 +36,7 @@ class DecisionTree:
         elif len(list(examples.targets.value_counts())) == 1:
             return list(examples.targets.value_counts())[0] # gives the only target in common between the examples
         # checking if there are no attributes left in the examples
-        elif attributes is empty:
+        elif attributes:
             return self.plurality_value(examples.targets)
         # defining the most important attribute and adding it to the tree as a node
         else:
@@ -54,11 +54,11 @@ class DecisionTree:
     # defining the function that selects the most common output value
     def plurality_value(self, examples):
         most_count = 0
-        most_name = none
-        for i in range (0, len(list(exaples.value_counts()))-1): # list(examples.value_counts()) gives the list of amount per value 
+        most_name = None
+        for i in range (0, len(list(examples.value_counts()))-1): # list(examples.value_counts()) gives the list of amount per value 
             if list(examples.value_counts())[i] > most_count:
                 most_count = list(examples.value_counts())[i]
-                most_name = list(example[list(examples)[0]].drop_duplicates())[i]
+                most_name = list(examples[list(examples)[0]].drop_duplicates())[i]
         return most_name
 
     # defining the most important attribute among the other by using information gain
@@ -73,7 +73,7 @@ class DecisionTree:
             right_member = 0
             for i in list(examples.features[attribute].drop_duplicates()):
                 right_member -= len(examples.features[example.features[attribute] == i])/len(example.features) \
-                    *entropy(examples.features[example.features[attribute] == i)
+                    *entropy(examples.features[example.features[attribute] == i])
             current = entropy_set + right_member # computing the information gain of each attribute
             if current > information_gain:
                 information_gain = current
@@ -88,7 +88,7 @@ class DecisionTree:
                                                                         # (which are targets' or attributes')
         return total
 
-    # defining a function that returns the examples that has that attribute's value
+    # defining a function that returns the examples that has a specific attribute's value
     def update_examples(self, examples, attribute, attribute_value):
         # getting the ids of the examples with attribute_value
         ids = list(examples.features[example.features[list(attribute)[0] == attribute_value]].index)
@@ -101,24 +101,6 @@ class DecisionTree:
 
 # TODO add this part into another file. Tree class definitions must be in a separate file and every test for dataset must be done in a different file
 iris = fetch_ucirepo(id=53)
-x = iris.data.features
-y = iris.data.targets
-#tmp = list(x)
-#print(x[tmp[1]].value_counts())
+dataset = iris.data
 
-#print("attributes names list", list(iris.data.features))
-#print("check if dataset is empty ", iris.data.features.empty)
-#print("length examples (row counts) ", len(iris.data.features))
-#print("only target name in common ", list(y[list(y)[0]].drop_duplicates())[0])
-#print("attribute name ", list(y)[0])
-#print("attribute values", list(y[list(y)[0]].drop_duplicates()))
-#print("list of attributes which have that exact value", x[x['petal length']==4.9])
-#print("filtering examples by attribute's value (gives the ids)")
-#print(list(iris.data.features[x['petal length']==4.9].index))
-#print(list(x[x['petal length'] == 4.9].value_counts()))
-
-#print(list(x['petal length'].value_counts()))
-#total = 0
-#for values in list(y.value_counts()):
-                                      #    total += values
-#print(total)
+decision_tree = DecisionTree(dataset, 100, 0)
