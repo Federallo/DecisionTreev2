@@ -80,7 +80,7 @@ class DecisionTree:
             current = entropy_set + right_member # computing the information gain of each attribute
             if current > information_gain:
                 information_gain = current
-                current_attribute = attribute
+                current_attribute = examples.features[[attribute]]
         return current_attribute
     
     # defining the entropy of a set
@@ -99,7 +99,6 @@ class DecisionTree:
         filtered_examples = pd.concat([examples.features.loc[ids], examples.targets.loc[ids]], keys = ['features', 'targets'])
         filtered_examples.features = filtered_examples['features']
         filtered_examples.targets = filtered_examples['targets']
-        print(filtered_examples)
         return filtered_examples
 
 
