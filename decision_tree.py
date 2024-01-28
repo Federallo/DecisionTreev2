@@ -44,9 +44,8 @@ class DecisionTree:
         else:
             A = self.max_importance(examples) # here we choose the most important attribute among the others
             tree = Node(list(A)[0]) # list(A)[0] gives the attribute name
-            print(list(A)[0])
             for value in list(A[list(A)[0]].drop_duplicates()): # gives the set of attribute values
-                exs = update_examples(examples, A, value) # selects the examples which have the attribute's value 'value'
+                exs = self.update_examples(examples, A, value) # selects the examples which have the attribute's value 'value'
                 subtree = self.decision_tree_learning(exs, attributes.remove(list(A)[0]), examples)
                 # FIXME maybe this one can be done better
                 tree.branch.label.append(values)
@@ -94,11 +93,12 @@ class DecisionTree:
     # defining a function that returns the examples that has a specific attribute's value
     def update_examples(self, examples, attribute, attribute_value):
         # getting the ids of the examples with attribute_value
-        ids = list(examples.features[example.features[list(attribute)[0] == attribute_value]].index)
+        ids = list(examples.features[examples.features[list(attribute)[0]] == attribute_value].index)
         # creating the dataframe which has only the examples with attribute_value
-        filtered_examples = pd.concat([examples.features.loc[ids], examples.targets.loc[ids]], keys = ['features', 'targets'])
-        filtered_examples.features = filtered_examples['features']
-        filtered_examples.targets = filtered_examples['targets']
+        # FIXME maybe it needs to be fixed
+        filtered_examples = pd.DataFrame()
+        filtered_examples.features = examples.features.loc[ids]
+        filtered_examples.targets = examples.targets.loc[ids]
         return filtered_examples
 
 
