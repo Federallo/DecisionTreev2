@@ -28,7 +28,7 @@ class DecisionTree:
         self.root = self.decision_tree_learning(examples, list(examples.features), {}) # parents_examples is empty because we are starting from an empty tree
 
     # defining recursive decision tree learning algorithm
-    def decision_tree_learning(examples, attributes, parent_examples):
+    def decision_tree_learning(self, examples, attributes, parent_examples):
         # checks if there are no examples left
         if examples.features.empty or self.depth == self.max_depth or len(examples.features) < self.min_examples:
             return self.plurality_value(parent_examples.targets)
@@ -43,7 +43,7 @@ class DecisionTree:
             A = max_importance(examples) # here we choose the most important attribute among the others
             tree = Node(list(A)[0]) # list(A)[0] gives the attribute name
             for value in list(A[list(A)[0]].drop_duplicates()): # gives the set of attribute values
-                exs = update_examples(examples, A, value) #examples.features[examples.features[list(A)[0]]==value]# selects the examples which have the attribute's value 'value'
+                exs = update_examples(examples, A, value) # selects the examples which have the attribute's value 'value'
                 subtree = self.decision_tree_learning(exs, attributes.remove(list(A)[0]), examples)
                 # FIXME maybe this one can be done better
                 tree.branch.label.append(values)
@@ -52,7 +52,7 @@ class DecisionTree:
         return tree
                 
     # defining the function that selects the most common output value
-    def plurality_value(examples):
+    def plurality_value(self, examples):
         most_count = 0
         most_name = none
         for i in range (0, len(list(exaples.value_counts()))): # list(examples.value_counts()) gives the list of amount per value 
@@ -62,7 +62,7 @@ class DecisionTree:
         return most_name
 
     # defining the most important attribute among the other by using information gain
-    def max_importance(examples):
+    def max_importance(self, examples):
         entropy_set = entropy(examples.targets) # computing the entropy of the entire set
         current_attribute = list(examples.features)[0]
         information_gain = entropy_set - entropy(current_attribute) # information gain of the first attribute
@@ -75,7 +75,7 @@ class DecisionTree:
         return current_attribute
     
     # defining the entropy of a set
-    def entropy(examples_set):
+    def entropy(self, examples_set):
         total = 0
         for i in list(examples_set.value_counts()): #the indices of values
             total -= i/len(examples_set)*math.log2(i/len(examples_set)) # where the fraction represent the distribution of datasets' values
@@ -83,7 +83,7 @@ class DecisionTree:
         return total
 
     # defining a function that returns the examples that has that attribute's value
-    def update_examples(examples, attribute, attribute_value):
+    def update_examples(self, examples, attribute, attribute_value):
         # getting the ids of the examples with attribute_value
         ids = list(examples.features[example.features[list(attribute)[0] == attribute_value]].index)
         # creating the dataframe which has only the examples with attribute_value
