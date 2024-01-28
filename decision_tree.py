@@ -90,6 +90,7 @@ class DecisionTree:
         filtered_examples = pd.concat([examples.features.loc[ids], examples.targets.loc[ids]], keys = ['features', 'targets'])
         filtered_examples.features = filtered_examples['features']
         filtered_examples.targets = filtered_examples['targets']
+        return filtered_examples
 
 
 # TODO add this part into another file. Tree class definitions must be in a separate file and every test for dataset must be done in a different file
