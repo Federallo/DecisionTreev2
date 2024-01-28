@@ -29,7 +29,7 @@ class DecisionTree:
 
     # defining recursive decision tree learning algorithm
     def decision_tree_learning(self, examples, attributes, parent_examples):
-        # checks if there are no examples left
+        # checks if there are no examples left or the tree have reached a certain depth or there are an amount of examples are less than a specific value
         if examples.features.empty or self.depth == self.max_depth or len(examples.features) < self.min_examples:
             return self.plurality_value(parent_examples.targets)
         # checks if the current examples have the same outcome
@@ -55,7 +55,7 @@ class DecisionTree:
     def plurality_value(self, examples):
         most_count = 0
         most_name = none
-        for i in range (0, len(list(exaples.value_counts()))): # list(examples.value_counts()) gives the list of amount per value 
+        for i in range (0, len(list(exaples.value_counts()))-1): # list(examples.value_counts()) gives the list of amount per value 
             if list(examples.value_counts())[i] > most_count:
                 most_count = list(examples.value_counts())[i]
                 most_name = list(example[list(examples)[0]].drop_duplicates())[i]
