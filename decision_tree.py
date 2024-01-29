@@ -33,13 +33,13 @@ class DecisionTree:
     def decision_tree_learning(self, examples, attributes, parent_examples):
         # checking if there are no examples left or the tree have reached a certain depth or there are an amount of examples are less than a specific value
         if examples.empty or self.depth == self.max_depth or len(examples) < self.min_examples:
-            return self.plurality_value(parent_examples)
+            return self.plurality_value(parent_examples[list(examples)[-1]])
         # checking if the current examples have the same outcome
         elif len(list(examples.value_counts())) == 1:
-            return list(examples.value_counts())[0] # gives the only target in common between the examples
+            return list(examples[-1].value_counts())[0] # gives the only target in common between the examples
         # checking if there are no attributes left in the examples
         elif not attributes:
-            return self.plurality_value(examples)
+            return self.plurality_value(examples[list(examples)[-1]])
         # defining the most important attribute and adding it to the tree as a node
         else:
             A = self.max_importance(examples) # here we choose the most important attribute among the others
@@ -67,21 +67,21 @@ class DecisionTree:
 
     # defining the most important attribute among the other by using information gain
     def max_importance(self, examples):
-        entropy_set = self.entropy(examples.targets) # computing the entropy of the entire set
+        entropy_set = self.entropy(examples[list(examples)[-1]]) # computing the entropy of the entire set note: examples[-1] gives only the class of outcomes (for example in iris is class)
         current_attribute = None
         information_gain = -1 # we set to -1 because the information gain value lise withnin the range 0-1. By doing so. We set the information gain of the first attribute
                               # in the for cycle
         # determining the attribute with highest information gain
-        for attribute in list(examples.features):
+        for attribute in list(examples[:-1]): # :-1 to indicate only features
             # computing the right member of information gain function
             right_member = 0
-            for i in list(examples.features[attribute].drop_duplicates()):
-                right_member -= len(examples.features[examples.features[attribute] == i])/len(examples.features) \
-                    *self.entropy(examples.features[examples.features[attribute] == i])
+            for i in list(examples[list(examples)[:-1]][attribute].drop_duplicates()):
+                right_member -= len(examples[list(examples)[:-1]][examples[attribute] == i])/len(examples.features) \
+                    *self.entropy(examples[examples[attribute] == i])
             current = entropy_set + right_member # computing the information gain of each attribute
             if current > information_gain:
                 information_gain = current
-                current_attribute = examples.features[[attribute]]
+                current_attribute = examples[[attribute]]
         return current_attribute
     
     # defining the entropy of a set
