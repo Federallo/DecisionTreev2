@@ -67,7 +67,8 @@ class DecisionTree:
 
     # defining the most important attribute among the other by using information gain
     def max_importance(self, examples):
-        entropy_set = self.entropy(examples[list(examples)[-1]]) # computing the entropy of the entire set note: examples[-1] gives only the class of outcomes (for example in iris is class)
+        entropy_set = self.entropy(examples[list(examples)[-1]]) # computing the entropy of the entire set note: examples[-1] gives only 
+                                                                 # the class of outcomes (for example in iris is class)
         current_attribute = None
         information_gain = -1 # we set to -1 because the information gain value lise withnin the range 0-1. By doing so. We set the information gain of the first attribute
                               # in the for cycle
@@ -76,7 +77,7 @@ class DecisionTree:
             # computing the right member of information gain function
             right_member = 0
             for i in list(examples[attribute].drop_duplicates()):
-                right_member -= len(examples[examples[attribute] == i])/len(examples.features) \
+                right_member -= len(examples[examples[attribute] == i])/len(examples[list(examples)[:-1]]) \
                     *self.entropy(examples[examples[attribute] == i])
             current = entropy_set + right_member # computing the information gain of each attribute
             if current > information_gain:
@@ -95,13 +96,10 @@ class DecisionTree:
     # defining a function that returns the examples that has a specific attribute's value
     def update_examples(self, examples, attribute, attribute_value):
         # getting the ids of the examples with attribute_value
-        ids = list(examples.features[examples.features[list(attribute)[0]] == attribute_value].index)
+        ids = list(examples[examples[list(attribute)[0]] == attribute_value].index)
         # creating the dataframe which has only the examples with attribute_value
         # FIXME maybe it needs to be fixed
-        filtered_examples = pd.DataFrame()
-        filtered_examples.features = examples.features.loc[ids]
-        print
-        filtered_examples.targets = examples.targets.loc[ids]
+        filtered_examples = pd.DataFrame(examples.loc[ids])
         return filtered_examples
 
 
