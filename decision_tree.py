@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 # defining branch data class in order to contain the branch's label and it subtree
 class Branch:
     def __init__(self):
-        self.label = None
-        self.subtree = None
+        self.label = []
+        self.subtree = []
 
 # defining tree nodes data structure
 class Node:
@@ -44,11 +44,15 @@ class DecisionTree:
         else:
             A = self.max_importance(examples) # here we choose the most important attribute among the others
             tree = Node(list(A)[0]) # list(A)[0] gives the attribute name
+            #print(list(A))
+            #print(attributes)
+            attributes.remove(list(A)[0]) # remoivng the attribut with highest information gain from the list
             for value in list(A[list(A)[0]].drop_duplicates()): # gives the set of attribute values
                 exs = self.update_examples(examples, A, value) # selects the examples which have the attribute's value 'value'
-                subtree = self.decision_tree_learning(exs, attributes.remove(list(A)[0]), examples)
+                #print(list(exs.features))
+                subtree = self.decision_tree_learning(exs, attributes, examples)
                 # FIXME maybe this one can be done better
-                tree.branch.label.append(values)
+                tree.branch.label.append(value)
                 tree.branch.subtree.append(subtree)
                 self.depth += 1 # TODO check if the position is correct
         return tree
@@ -98,6 +102,7 @@ class DecisionTree:
         # FIXME maybe it needs to be fixed
         filtered_examples = pd.DataFrame()
         filtered_examples.features = examples.features.loc[ids]
+        print
         filtered_examples.targets = examples.targets.loc[ids]
         return filtered_examples
 
@@ -109,12 +114,15 @@ def plot_tree(decision_tree, target): # where target is the list of the possible
     T.add_node(decision_tree.attribute_name)
     for i in range (0, decision_tree.brarch-1):
         # add directly target name if the are no subtrees
-        if attributes.subtree[i] in target:
+        if attributes.subtree[i] in target: # FIXME maybe it doesn't see the value in attributes.subtree[i]
             T.add_node(attributes.subtree[i])
             T.add_edge(decision_tree.attribute_name, attribute.subtree[i], weight = attribute.label[i])
         # recursive call for the subtrees
         else:
+            T.add_node(attributes.subtree[i].attribute_name) # attribute_name because there is an attribute connected to the node
+            T.add_edge(decision_tree.attribute_name, attribute.subtree[i].attribute_name)
             plot_tree(attributes.subtree, target)
+
         
     
 
@@ -122,10 +130,10 @@ def plot_tree(decision_tree, target): # where target is the list of the possible
 
 # TODO add this part into another file. Tree class definitions must be in a separate file and every test for dataset must be done in a different file
 iris = fetch_ucirepo(id=53)
-dataset = iris.data
+dataset = iris.data.original
+print(list(dataset)[:-1])
 
-decision_tree = DecisionTree(dataset, 100, 0)
-
+#decision_tree = DecisionTree(dataset, 100, 0)
 # creating tree
 plot_tree(decision_tree.root, list(dataset.targets))
 
