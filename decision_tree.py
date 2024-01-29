@@ -33,13 +33,13 @@ class DecisionTree:
     def decision_tree_learning(self, examples, attributes, parent_examples):
         # checking if there are no examples left or the tree have reached a certain depth or there are an amount of examples are less than a specific value
         if examples.empty or self.depth == self.max_depth or len(examples) < self.min_examples:
-            return self.plurality_value(parent_examples[list(examples)[-1]])
+            return self.plurality_value(parent_examples[[list(examples)[-1]]])
         # checking if the current examples have the same outcome
         elif len(list(examples.value_counts())) == 1:
-            return list(examples[-1].value_counts())[0] # gives the only target in common between the examples
+            return list(examples[list(examples)[-1]].value_counts())[0] # gives the only target in common between the examples
         # checking if there are no attributes left in the examples
         elif not attributes:
-            return self.plurality_value(examples[list(examples)[-1]])
+            return self.plurality_value(examples[[list(examples)[-1]]])
         # defining the most important attribute and adding it to the tree as a node
         else:
             A = self.max_importance(examples) # here we choose the most important attribute among the others
@@ -130,8 +130,8 @@ dataset = iris.data.original
 
 decision_tree = DecisionTree(dataset, 100, 0)
 # creating tree
-plot_tree(decision_tree.root, list(dataset)[-1])
+#plot_tree(decision_tree.root, list(dataset)[-1])
 
 # printing tree
-networkx.draw(g1)
-plt.show()
+#networkx.draw(g1)
+#plt.show()
