@@ -75,8 +75,8 @@ class DecisionTree:
         for attribute in list(examples[:-1]): # :-1 to indicate only features
             # computing the right member of information gain function
             right_member = 0
-            for i in list(examples[list(examples)[:-1]][attribute].drop_duplicates()):
-                right_member -= len(examples[list(examples)[:-1]][examples[attribute] == i])/len(examples.features) \
+            for i in list(examples[attribute].drop_duplicates()):
+                right_member -= len(examples[examples[attribute] == i])/len(examples.features) \
                     *self.entropy(examples[examples[attribute] == i])
             current = entropy_set + right_member # computing the information gain of each attribute
             if current > information_gain:
