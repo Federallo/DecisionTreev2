@@ -40,3 +40,5 @@ print(list(x[x['petal length'] == 4.9].value_counts()))
 outcome
 [1, 1, 1, 1, 1]
 
+29/01/2024
+print(list(dataset)[:-1]) gives as outcome  ['sepal length', 'sepal width', 'petal length', 'petal width'] (from iris.data.original)
