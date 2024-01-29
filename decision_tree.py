@@ -26,7 +26,7 @@ class DecisionTree:
     def __init__(self, examples, P, M): # note examples input must be like iris.data
         self.min_examples = M
         self.max_depth = P
-        self.depth = 0 # TODO find where to increase tree depth
+        self.depth = 0
         self.root = self.decision_tree_learning(examples, list(examples)[:-1], {}) # parents_examples is empty because we are starting from an empty tree
 
     # defining recursive decision tree learning algorithm
@@ -48,7 +48,6 @@ class DecisionTree:
             for value in list(A[list(A)[0]].drop_duplicates()): # gives the set of attribute values
                 exs = self.update_examples(examples, A, value) # selects the examples which have the attribute's value 'value'
                 subtree = self.decision_tree_learning(exs, attributes, examples)
-                # FIXME maybe this one can be done better
                 tree.branch.label.append(value)
                 tree.branch.subtree.append(subtree)
                 self.depth += 1 # TODO check if the position is correct
@@ -97,7 +96,6 @@ class DecisionTree:
         # getting the ids of the examples with attribute_value
         ids = list(examples[examples[list(attribute)[0]] == attribute_value].index)
         # creating the dataframe which has only the examples with attribute_value
-        # FIXME maybe it needs to be fixed
         filtered_examples = pd.DataFrame(examples.loc[ids])
         return filtered_examples
 
@@ -109,7 +107,7 @@ def plot_tree(decision_tree, target): # where target is the list of the possible
     T.add_node(decision_tree.attribute_name)
     for i in range (0, len(decision_tree.branch.subtree)-1):
         # add directly target name if the are no subtrees
-        if decision_tree.branch.subtree[i] in target: # FIXME maybe it doesn't see the value in attributes.subtree[i]
+        if decision_tree.branch.subtree[i] in target:
             T.add_node(decision_tree.branch.subtree[i])
             T.add_edge(decision_tree.attribute_name, decision_tree.branch.subtree[i], weight = decision_tree.branch.label[i])
         # recursive call for the subtrees
@@ -132,5 +130,5 @@ decision_tree = DecisionTree(dataset, 100, 0)
 plot_tree(decision_tree.root, list(dataset[list(dataset)[-1]].drop_duplicates()))
 
 # printing tree
-networkx.draw(g1)
+networkx.draw(T, with_labels = True)
 plt.show()
