@@ -107,7 +107,6 @@ T = networkx.Graph()
 # defining plotting tree function
 def plot_tree(decision_tree, target): # where target is the list of the possible dataset's targets
     T.add_node(decision_tree.attribute_name)
-    #print(decision_tree.branch.subtree)
     for i in range (0, len(decision_tree.branch.subtree)-1):
         # add directly target name if the are no subtrees
         if decision_tree.branch.subtree[i] in target: # FIXME maybe it doesn't see the value in attributes.subtree[i]
@@ -130,7 +129,7 @@ dataset = iris.data.original
 
 decision_tree = DecisionTree(dataset, 100, 0)
 # creating tree
-plot_tree(decision_tree.root, dataset[list(dataset)[-1]].drop_duplicates())
+plot_tree(decision_tree.root, list(dataset[list(dataset)[-1]].drop_duplicates()))
 
 # printing tree
 networkx.draw(g1)
