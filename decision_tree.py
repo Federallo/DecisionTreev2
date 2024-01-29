@@ -27,25 +27,23 @@ class DecisionTree:
         self.min_examples = M
         self.max_depth = P
         self.depth = 0 # TODO find where to increase tree depth
-        self.root = self.decision_tree_learning(examples, list(examples.features), {}) # parents_examples is empty because we are starting from an empty tree
+        self.root = self.decision_tree_learning(examples, list(examples)[:-1], {}) # parents_examples is empty because we are starting from an empty tree
 
     # defining recursive decision tree learning algorithm
     def decision_tree_learning(self, examples, attributes, parent_examples):
         # checking if there are no examples left or the tree have reached a certain depth or there are an amount of examples are less than a specific value
-        if examples.features.empty or self.depth == self.max_depth or len(examples.features) < self.min_examples:
-            return self.plurality_value(parent_examples.targets)
+        if examples.empty or self.depth == self.max_depth or len(examples) < self.min_examples:
+            return self.plurality_value(parent_examples)
         # checking if the current examples have the same outcome
-        elif len(list(examples.targets.value_counts())) == 1:
-            return list(examples.targets.value_counts())[0] # gives the only target in common between the examples
+        elif len(list(examples.value_counts())) == 1:
+            return list(examples.value_counts())[0] # gives the only target in common between the examples
         # checking if there are no attributes left in the examples
         elif not attributes:
-            return self.plurality_value(examples.targets)
+            return self.plurality_value(examples)
         # defining the most important attribute and adding it to the tree as a node
         else:
             A = self.max_importance(examples) # here we choose the most important attribute among the others
             tree = Node(list(A)[0]) # list(A)[0] gives the attribute name
-            #print(list(A))
-            #print(attributes)
             attributes.remove(list(A)[0]) # remoivng the attribut with highest information gain from the list
             for value in list(A[list(A)[0]].drop_duplicates()): # gives the set of attribute values
                 exs = self.update_examples(examples, A, value) # selects the examples which have the attribute's value 'value'
@@ -131,11 +129,10 @@ def plot_tree(decision_tree, target): # where target is the list of the possible
 # TODO add this part into another file. Tree class definitions must be in a separate file and every test for dataset must be done in a different file
 iris = fetch_ucirepo(id=53)
 dataset = iris.data.original
-print(list(dataset)[:-1])
 
-#decision_tree = DecisionTree(dataset, 100, 0)
+decision_tree = DecisionTree(dataset, 100, 0)
 # creating tree
-plot_tree(decision_tree.root, list(dataset.targets))
+plot_tree(decision_tree.root, list(dataset)[-1])
 
 # printing tree
 networkx.draw(g1)
