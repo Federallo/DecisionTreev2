@@ -36,7 +36,7 @@ class DecisionTree:
             return self.plurality_value(parent_examples[[list(examples)[-1]]])
         # checking if the current examples have the same outcome
         elif len(list(examples.value_counts())) == 1:
-            return list(examples[list(examples)[-1]].value_counts())[0] # gives the only target in common between the examples
+            return list(examples[list(examples)[-1]])[0] # gives the only target in common between the examples
         # checking if there are no attributes left in the examples
         elif not attributes:
             return self.plurality_value(examples[[list(examples)[-1]]])
@@ -47,7 +47,6 @@ class DecisionTree:
             attributes.remove(list(A)[0]) # remoivng the attribut with highest information gain from the list
             for value in list(A[list(A)[0]].drop_duplicates()): # gives the set of attribute values
                 exs = self.update_examples(examples, A, value) # selects the examples which have the attribute's value 'value'
-                #print(list(exs.features))
                 subtree = self.decision_tree_learning(exs, attributes, examples)
                 # FIXME maybe this one can be done better
                 tree.branch.label.append(value)
@@ -59,7 +58,7 @@ class DecisionTree:
     def plurality_value(self, examples):
         most_count = 0
         most_name = None
-        for i in range (0, len(list(examples.value_counts()))-1): # list(examples.value_counts()) gives the list of amount per value 
+        for i in range(len(list(examples.value_counts()))): # list(examples.value_counts()) gives the list of amount per value
             if list(examples.value_counts())[i] > most_count:
                 most_count = list(examples.value_counts())[i]
                 most_name = list(examples[list(examples)[0]].drop_duplicates())[i]
@@ -108,16 +107,17 @@ T = networkx.Graph()
 # defining plotting tree function
 def plot_tree(decision_tree, target): # where target is the list of the possible dataset's targets
     T.add_node(decision_tree.attribute_name)
-    for i in range (0, decision_tree.brarch-1):
+    #print(decision_tree.branch.subtree)
+    for i in range (0, len(decision_tree.branch.subtree)-1):
         # add directly target name if the are no subtrees
-        if attributes.subtree[i] in target: # FIXME maybe it doesn't see the value in attributes.subtree[i]
-            T.add_node(attributes.subtree[i])
-            T.add_edge(decision_tree.attribute_name, attribute.subtree[i], weight = attribute.label[i])
+        if decision_tree.branch.subtree[i] in target: # FIXME maybe it doesn't see the value in attributes.subtree[i]
+            T.add_node(decision_tree.branch.subtree[i])
+            T.add_edge(decision_tree.attribute_name, decision_tree.branch.subtree[i], weight = decision_tree.branch.label[i])
         # recursive call for the subtrees
         else:
-            T.add_node(attributes.subtree[i].attribute_name) # attribute_name because there is an attribute connected to the node
-            T.add_edge(decision_tree.attribute_name, attribute.subtree[i].attribute_name)
-            plot_tree(attributes.subtree, target)
+            T.add_node(decision_tree.branch.subtree[i].attribute_name) # attribute_name because there is an attribute connected to the node
+            T.add_edge(decision_tree.attribute_name, decision_tree.branch.subtree[i].attribute_name)
+            plot_tree(decision_tree.branch.subtree[i], target)
 
         
     
@@ -130,8 +130,8 @@ dataset = iris.data.original
 
 decision_tree = DecisionTree(dataset, 100, 0)
 # creating tree
-#plot_tree(decision_tree.root, list(dataset)[-1])
+plot_tree(decision_tree.root, dataset[list(dataset)[-1]].drop_duplicates())
 
 # printing tree
-#networkx.draw(g1)
-#plt.show()
+networkx.draw(g1)
+plt.show()
