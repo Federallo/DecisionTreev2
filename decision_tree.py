@@ -50,7 +50,7 @@ class DecisionTree:
                 subtree = self.decision_tree_learning(exs, attributes, examples)
                 tree.branch.label.append(value)
                 tree.branch.subtree.append(subtree)
-                self.depth += 1 # TODO check if the position is correct
+        self.depth += 1 
 
         return tree
                 
@@ -59,9 +59,9 @@ class DecisionTree:
         most_common_output_count = 0
         most_common_output_name = None
         for i in range(len(list(examples.value_counts()))): # list(examples.value_counts()) gives the list of amount per value
-            if list(examples.value_counts())[i] > most_count:
+            if list(examples.value_counts())[i] > most_common_output_count:
                 most_common_output_count = list(examples.value_counts())[i]
-                most_common_output_name = list(examples[list(examples)[0]].drop_duplicates())[i]
+                most_name = list(examples[list(examples)[0]].drop_duplicates())[i]
 
         return most_name
 
@@ -138,6 +138,8 @@ dataset = iris.data.original
 
 # creating tree
 decision_tree = DecisionTree(dataset, 100, 0)
+#print(decision_tree.depth)
+
 
 # plotting tree
 counter_start = 0 # setting the counter to distinguish nodes and branches
@@ -150,3 +152,4 @@ edge_labels = {(u,v): d['label'] for u, v, d in T.edges(data = True)} # adding t
 networkx.draw(T, pos, with_labels = True, labels = labels, node_size = 2000, font_size = 8) # setting the draw
 networkx.draw_networkx_edge_labels(T, pos, edge_labels = edge_labels)
 plt.show()
+
