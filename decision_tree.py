@@ -131,8 +131,9 @@ def plot_tree(decision_tree, target, counter): # where target is the list of the
 
     return root_id, counter
         
+#testing data #TODO must be done on training set and test set
+#def test_dataset(decision_tree, test_data):
     
-
 
 
 # TODO add this part into another file. Tree class definitions must be in a separate file and every test for dataset must be done in a different file
@@ -142,12 +143,13 @@ shuffled_dataset = iris.data.original.sample(frac = 1, random_state = 42)
 #extracting test data
 rows_to_extract = 30
 test_data = shuffled_dataset.head(rows_to_extract)
-dataset = iris.data.original
-
+dataset = shuffled_dataset.drop(test_data.index)
+print(len(dataset))
+print(len(test_data))
 
 # creating tree
-decision_tree = DecisionTree(dataset, 100, 0) # (dataset, max tree depth, lower bound of examples)
-
+#decision_tree = DecisionTree(dataset, 100, 0) # (dataset, max tree depth, lower bound of examples)
+"""
 #checking if the tree is empty or not
 if decision_tree.__dict__:
     # plotting tree
@@ -166,3 +168,4 @@ if decision_tree.__dict__:
     plt.show()
 else:
     print("Error: cannot plot an empty tree")
+"""
