@@ -42,3 +42,15 @@ outcome
 
 29/01/2024
 print(list(dataset)[:-1]) gives as outcome  ['sepal length', 'sepal width', 'petal length', 'petal width'] (from iris.data.original)
+
+01/02/2024
+[('0_root', '1_root'), ('0_root', '1_target'), ('0_root', '2_target'), ('0_root', '3_target'), ('0_root', '4_target'), ('0_root', '5_target'), ('0_root', '6_target'), ('0_root', '7_ta
+rget'), ('0_root', '8_target'), ('0_root', '9_target'), ('0_root', '10_target'), ('0_root', '11_target'), ('0_root', '12_target'), ('0_root', '13_target'), ('0_root', '14_target'), ('
+0_root', '15_target'), ('0_root', '16_target'), ('0_root', '17_target'), ('0_root', '18_target'), ('0_root', '19_target'), ('0_root', '20_target'), ('0_root', '21_target'), ('0_root',
+ '22_target'), ('0_root', '23_target'), ('0_root', '24_target'), ('0_root', '25_target'), ('0_root', '26_target'), ('0_root', '27_target'), ('0_root', '28_target'), ('0_root', '29_tar
+get'), ('0_root', '30_target'), ('0_root', '31_target'), ('0_root', '32_target'), ('0_root', '33_target'), ('0_root', '34_target'), ('0_root', '35_target'), ('0_root', '36_target'), (
+'0_root', '37_target'), ('0_root', '38_target'), ('0_root', '39_target'), ('0_root', '40_target'), ('0_root', '41_target'), ('0_root', '42_target'), ('1_root', '2_root'), ('1_root', '
+2_target'), ('1_root', '3_root'), ('1_root', '3_target'), ('1_root', '4_target'), ('1_root', '5_target'), ('1_root', '6_target'), ('1_root', '7_target'), ('2_root', '3_target'), ('2_r
+oot', '4_target'), ('4_target', '3_root'), ('3_root', '5_target')]
+
+FIXME: need to adjust nodes connections
