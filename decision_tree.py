@@ -137,6 +137,11 @@ def plot_tree(decision_tree, target, counter): # where target is the list of the
 
 # TODO add this part into another file. Tree class definitions must be in a separate file and every test for dataset must be done in a different file
 iris = fetch_ucirepo(id=53)
+#shuffle rows of dataframe
+shuffled_dataset = iris.data.original.sample(frac = 1, random_state = 42)
+#extracting test data
+rows_to_extract = 30
+test_data = shuffled_dataset.head(rows_to_extract)
 dataset = iris.data.original
 
 
