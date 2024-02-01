@@ -63,9 +63,9 @@ class DecisionTree:
         for i in range(len(list(examples.value_counts()))): # list(examples.value_counts()) gives the list of amount per value
             if list(examples.value_counts())[i] > most_common_output_count:
                 most_common_output_count = list(examples.value_counts())[i]
-                most_name = list(examples[list(examples)[0]].drop_duplicates())[i]
+                most_common_output_name = list(examples[list(examples)[0]].drop_duplicates())[i]
 
-        return most_name
+        return most_common_output_name
 
     # defining the most important attribute among the other by using information gain
     def max_importance(self, examples, list_attributes):
@@ -141,7 +141,7 @@ dataset = iris.data.original
 
 
 # creating tree
-decision_tree = DecisionTree(dataset, 1000, 151) # (dataset, max tree depth, lower bound of examples)
+decision_tree = DecisionTree(dataset, 100, 0) # (dataset, max tree depth, lower bound of examples)
 
 #checking if the tree is empty or not
 if decision_tree.__dict__:
