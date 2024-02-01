@@ -51,16 +51,18 @@ class DecisionTree:
                 tree.branch.label.append(value)
                 tree.branch.subtree.append(subtree)
                 self.depth += 1 # TODO check if the position is correct
+
         return tree
                 
     # defining the function that selects the most common output value
     def plurality_value(self, examples):
-        most_count = 0
-        most_name = None
+        most_common_output_count = 0
+        most_common_output_name = None
         for i in range(len(list(examples.value_counts()))): # list(examples.value_counts()) gives the list of amount per value
             if list(examples.value_counts())[i] > most_count:
-                most_count = list(examples.value_counts())[i]
-                most_name = list(examples[list(examples)[0]].drop_duplicates())[i]
+                most_common_output_count = list(examples.value_counts())[i]
+                most_common_output_name = list(examples[list(examples)[0]].drop_duplicates())[i]
+
         return most_name
 
     # defining the most important attribute among the other by using information gain
@@ -81,6 +83,7 @@ class DecisionTree:
             if current > information_gain:
                 information_gain = current
                 current_attribute = examples[[attribute]]
+
         return current_attribute
     
     # defining the entropy of a set
@@ -97,6 +100,7 @@ class DecisionTree:
         ids = list(examples[examples[list(attribute)[0]] == attribute_value].index)
         # creating the dataframe which has only the examples with attribute_value
         filtered_examples = pd.DataFrame(examples.loc[ids])
+
         return filtered_examples
 
 
@@ -118,8 +122,8 @@ def plot_tree(decision_tree, target, counter): # where target is the list of the
             counter += 1
         # recursive call for the subtrees
         else:
-            node_id, counter = plot_tree(decision_tree.branch.subtree[i], target, counter)
-            T.add_edge(root_id, node_id, label = decision_tree.branch.label[i]) # the second argument returns the id of the subtree
+            node_id, counter = plot_tree(decision_tree.branch.subtree[i], target, counter) # keeping track of counter in order to have separate nodes
+            T.add_edge(root_id, node_id, label = decision_tree.branch.label[i])
 
     return root_id, counter
         
@@ -131,31 +135,18 @@ def plot_tree(decision_tree, target, counter): # where target is the list of the
 iris = fetch_ucirepo(id=53)
 dataset = iris.data.original
 
-decision_tree = DecisionTree(dataset, 100, 0)
-#print(decision_tree.root.attribute_name)
-#print(len(dataset[decision_tree.root.attribute_name].value_counts()))
-#print(len(decision_tree.root.branch.subtree))
+
 # creating tree
-plot_tree(decision_tree.root, list(dataset[list(dataset)[-1]].drop_duplicates()), 0)
-#print(T.edges())
+decision_tree = DecisionTree(dataset, 100, 0)
+
+# plotting tree
+counter_start = 0 # setting the counter to distinguish nodes and branches
+plot_tree(decision_tree.root, list(dataset[list(dataset)[-1]].drop_duplicates()), counter_start)
 
 # printing tree
-pos = networkx.spring_layout(T)
-labels = networkx.get_node_attributes(T, 'label')
-edge_labels = {(u,v): d['label'] for u, v, d in T.edges(data = True)}
-networkx.draw(T, pos, with_labels = True, labels = labels, node_size = 3000, font_size = 8)
+pos = networkx.fruchterman_reingold_layout(T) # choosing the layout for displaying the tree
+labels = networkx.get_node_attributes(T, 'label') # getting the branch labels from multigraph T
+edge_labels = {(u,v): d['label'] for u, v, d in T.edges(data = True)} # adding the labels in a new variable
+networkx.draw(T, pos, with_labels = True, labels = labels, node_size = 2000, font_size = 8) # setting the draw
 networkx.draw_networkx_edge_labels(T, pos, edge_labels = edge_labels)
 plt.show()
-
-
-# creating tree by using library
-#from sklearn import tree
-#from sklearn.tree import DecisionTreeClassifier
-#import matplotlib.pyplot as plt
-#import sys
-
-#dtree = DecisionTreeClassifier()
-#dtree = dtree.fit(iris.data.features, iris.data.targets)
-
-#tree.plot_tree(dtree, feature_names = list(iris.data.features))
-#plt.savefig('decision_tree_plot.png')
