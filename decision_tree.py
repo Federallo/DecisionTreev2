@@ -26,31 +26,32 @@ class DecisionTree:
     def __init__(self, examples, P, M): # note examples input must be like iris.data
         self.min_examples = M
         self.max_depth = P
-        self.depth = 0
+        self.depth = 1
         self.root = self.decision_tree_learning(examples, list(examples)[:-1], {}) # parents_examples is empty because we are starting from an empty tree
 
     # defining recursive decision tree learning algorithm
     def decision_tree_learning(self, examples, attributes, parent_examples):
-        # checking if there are no examples left or the tree have reached a certain depth or there are an amount of examples are less than a specific value
-        if examples.empty or self.depth == self.max_depth or len(examples) < self.min_examples:
-            return self.plurality_value(parent_examples[[list(examples)[-1]]])
-        # checking if the current examples have the same outcome
-        elif len(list(examples.value_counts())) == 1:
+        # checking if there are no examples left or the tree have reached a certain depth or 
+        # there are an amount of examples are less than a lower bound
+        if examples.empty:
+            return self.plurality_value(parent_examples[[list(parent_examples)[-1]]])
+        # checking if the current examples have the same outcome (i.e. the dataset is pure)
+        elif len(list(examples[list(examples)[-1]].value_counts())) == 1 or self.depth >= self.max_depth or len(examples) < self.min_examples:
             return list(examples[list(examples)[-1]])[0] # gives the only target in common between the examples
         # checking if there are no attributes left in the examples
         elif not attributes:
             return self.plurality_value(examples[[list(examples)[-1]]])
         # defining the most important attribute and adding it to the tree as a node
         else:
-            A = self.max_importance(examples) # here we choose the most important attribute among the others
+            self.depth += 1
+            A = self.max_importance(examples, attributes) # here we choose the most important attribute among the others
             tree = Node(list(A)[0]) # list(A)[0] gives the attribute name
-            attributes.remove(list(A)[0]) # remoivng the attribut with highest information gain from the list
+            attributes.remove(list(A)[0]) # remoivng the attribute with highest information gain from the list
             for value in list(A[list(A)[0]].drop_duplicates()): # gives the set of attribute values
                 exs = self.update_examples(examples, A, value) # selects the examples which have the attribute's value 'value'
                 subtree = self.decision_tree_learning(exs, attributes, examples)
                 tree.branch.label.append(value)
                 tree.branch.subtree.append(subtree)
-        self.depth += 1 
 
         return tree
                 
@@ -66,7 +67,7 @@ class DecisionTree:
         return most_name
 
     # defining the most important attribute among the other by using information gain
-    def max_importance(self, examples):
+    def max_importance(self, examples, list_attributes):
         entropy_set = self.entropy(examples[list(examples)[-1]]) # computing the entropy of the entire set note: examples[-1] gives only 
                                                                  # the class of outcomes (for example in iris is class)
         current_attribute = None
@@ -79,8 +80,10 @@ class DecisionTree:
             for i in list(examples[attribute].drop_duplicates()):
                 right_member -= len(examples[examples[attribute] == i])/len(examples[list(examples)[:-1]]) \
                     *self.entropy(examples[examples[attribute] == i])
+
             current = entropy_set + right_member # computing the information gain of each attribute
-            if current > information_gain:
+
+            if current > information_gain and attribute in list_attributes:
                 information_gain = current
                 current_attribute = examples[[attribute]]
 
@@ -137,13 +140,12 @@ dataset = iris.data.original
 
 
 # creating tree
-decision_tree = DecisionTree(dataset, 100, 0)
-#print(decision_tree.depth)
-
+decision_tree = DecisionTree(dataset, 2, 0) # (dataset, max tree depth, lower bound of examples)
 
 # plotting tree
 counter_start = 0 # setting the counter to distinguish nodes and branches
 plot_tree(decision_tree.root, list(dataset[list(dataset)[-1]].drop_duplicates()), counter_start)
+
 
 # printing tree
 pos = networkx.fruchterman_reingold_layout(T) # choosing the layout for displaying the tree
@@ -152,4 +154,3 @@ edge_labels = {(u,v): d['label'] for u, v, d in T.edges(data = True)} # adding t
 networkx.draw(T, pos, with_labels = True, labels = labels, node_size = 2000, font_size = 8) # setting the draw
 networkx.draw_networkx_edge_labels(T, pos, edge_labels = edge_labels)
 plt.show()
-
