@@ -24,6 +24,8 @@ class DecisionTree:
 
     # initialising decision tree
     def __init__(self, examples, P, M): # note examples input must be like iris.data
+        if M > len(examples):
+            return print("Error: lower bound exceedes dataset dimensions")
         self.min_examples = M
         self.max_depth = P
         self.depth = 1
@@ -31,12 +33,11 @@ class DecisionTree:
 
     # defining recursive decision tree learning algorithm
     def decision_tree_learning(self, examples, attributes, parent_examples):
-        # checking if there are no examples left         
-        if examples.empty:
+        # checking if there are no examples left or the number of examples are less than a lower bound         
+        if examples.empty or len(examples) < self.min_examples:
             return self.plurality_value(parent_examples[[list(parent_examples)[-1]]])
-        # checking if the current examples have the same outcome (i.e. the dataset is pure)or the tree have reached a certain depth or 
-        # there are an amount of examples are less than a lower bound
-        elif len(list(examples[list(examples)[-1]].value_counts())) == 1 or self.depth >= self.max_depth or len(examples) < self.min_examples:
+        # checking if the current examples have the same outcome (i.e. the dataset is pure)or the tree have reached a certain depth 
+        elif len(list(examples[list(examples)[-1]].value_counts())) == 1 or self.depth >= self.max_depth:
             return list(examples[list(examples)[-1]])[0] # gives the only target in common between the examples
         # checking if there are no attributes left in the examples
         elif not attributes:
@@ -140,17 +141,23 @@ dataset = iris.data.original
 
 
 # creating tree
-decision_tree = DecisionTree(dataset, 2, 80) # (dataset, max tree depth, lower bound of examples)
+decision_tree = DecisionTree(dataset, 1000, 151) # (dataset, max tree depth, lower bound of examples)
 
-# plotting tree
-counter_start = 0 # setting the counter to distinguish nodes and branches
-plot_tree(decision_tree.root, list(dataset[list(dataset)[-1]].drop_duplicates()), counter_start)
+#checking if the tree is empty or not
+if decision_tree.__dict__:
+    # plotting tree
+    counter_start = 0 # setting the counter to distinguish nodes and branches
+    plot_tree(decision_tree.root, list(dataset[list(dataset)[-1]].drop_duplicates()), counter_start)
 
 
-# printing tree
-pos = networkx.fruchterman_reingold_layout(T) # choosing the layout for displaying the tree
-labels = networkx.get_node_attributes(T, 'label') # getting the branch labels from multigraph T
-edge_labels = {(u,v): d['label'] for u, v, d in T.edges(data = True)} # adding the labels in a new variable
-networkx.draw(T, pos, with_labels = True, labels = labels, node_size = 2000, font_size = 8) # setting the draw
-networkx.draw_networkx_edge_labels(T, pos, edge_labels = edge_labels)
-plt.show()
+    # printing tree
+    pos = networkx.fruchterman_reingold_layout(T) # choosing the layout for displaying the tree
+    labels = networkx.get_node_attributes(T, 'label') # getting the branch labels from multigraph T
+    edge_labels = {(u,v): d['label'] for u, v, d in T.edges(data = True)} # adding the labels in a new variable
+    node_size = 2000
+    font_size = 8
+    networkx.draw(T, pos, with_labels = True, labels = labels, node_size = node_size, font_size = font_size) # setting the draw
+    networkx.draw_networkx_edge_labels(T, pos, edge_labels = edge_labels)
+    plt.show()
+else:
+    print("Error: cannot plot an empty tree")
