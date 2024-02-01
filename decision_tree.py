@@ -31,11 +31,11 @@ class DecisionTree:
 
     # defining recursive decision tree learning algorithm
     def decision_tree_learning(self, examples, attributes, parent_examples):
-        # checking if there are no examples left or the tree have reached a certain depth or 
-        # there are an amount of examples are less than a lower bound
+        # checking if there are no examples left         
         if examples.empty:
             return self.plurality_value(parent_examples[[list(parent_examples)[-1]]])
-        # checking if the current examples have the same outcome (i.e. the dataset is pure)
+        # checking if the current examples have the same outcome (i.e. the dataset is pure)or the tree have reached a certain depth or 
+        # there are an amount of examples are less than a lower bound
         elif len(list(examples[list(examples)[-1]].value_counts())) == 1 or self.depth >= self.max_depth or len(examples) < self.min_examples:
             return list(examples[list(examples)[-1]])[0] # gives the only target in common between the examples
         # checking if there are no attributes left in the examples
@@ -140,7 +140,7 @@ dataset = iris.data.original
 
 
 # creating tree
-decision_tree = DecisionTree(dataset, 2, 0) # (dataset, max tree depth, lower bound of examples)
+decision_tree = DecisionTree(dataset, 2, 80) # (dataset, max tree depth, lower bound of examples)
 
 # plotting tree
 counter_start = 0 # setting the counter to distinguish nodes and branches
