@@ -101,21 +101,27 @@ class DecisionTree:
 
 
 #plotting tree
-T = networkx.Graph()
+T = networkx.MultiGraph()
 # defining plotting tree function
-def plot_tree(decision_tree, target): # where target is the list of the possible dataset's targets
-    T.add_node(decision_tree.attribute_name)
-    for i in range (0, len(decision_tree.branch.subtree)-1):
+def plot_tree(decision_tree, target, counter): # where target is the list of the possible dataset's targets
+    # adding unique identifiers in order to have separate nodes and branches
+    root_id = f"{counter}_root"
+    T.add_node(root_id, label = decision_tree.attribute_name)
+    counter += 1
+    for i in range(len(decision_tree.branch.subtree)):
         # add directly target name if the are no subtrees
         if decision_tree.branch.subtree[i] in target:
-            T.add_node(decision_tree.branch.subtree[i])
-            T.add_edge(decision_tree.attribute_name, decision_tree.branch.subtree[i], weight = decision_tree.branch.label[i])
+            target_id = f"{counter}_target"
+            T.add_node(target_id, label = decision_tree.branch.subtree[i])
+            #T.add_edge(decision_tree.attribute_name, decision_tree.branch.subtree[i], weight = decision_tree.branch.label[i])
+            T.add_edge(root_id, target_id, label = decision_tree.branch.label[i])
+            counter += 1
         # recursive call for the subtrees
         else:
-            T.add_node(decision_tree.branch.subtree[i].attribute_name) # attribute_name because there is an attribute connected to the node
-            T.add_edge(decision_tree.attribute_name, decision_tree.branch.subtree[i].attribute_name)
-            plot_tree(decision_tree.branch.subtree[i], target)
+            node_id, counter = plot_tree(decision_tree.branch.subtree[i], target, counter)
+            T.add_edge(root_id, node_id, label = decision_tree.branch.label[i]) # the second argument returns the id of the subtree
 
+    return root_id, counter
         
     
 
@@ -126,9 +132,30 @@ iris = fetch_ucirepo(id=53)
 dataset = iris.data.original
 
 decision_tree = DecisionTree(dataset, 100, 0)
+#print(decision_tree.root.attribute_name)
+#print(len(dataset[decision_tree.root.attribute_name].value_counts()))
+#print(len(decision_tree.root.branch.subtree))
 # creating tree
-plot_tree(decision_tree.root, list(dataset[list(dataset)[-1]].drop_duplicates()))
+plot_tree(decision_tree.root, list(dataset[list(dataset)[-1]].drop_duplicates()), 0)
+#print(T.edges())
 
 # printing tree
-networkx.draw(T, with_labels = True)
+pos = networkx.spring_layout(T)
+labels = networkx.get_node_attributes(T, 'label')
+edge_labels = {(u,v): d['label'] for u, v, d in T.edges(data = True)}
+networkx.draw(T, pos, with_labels = True, labels = labels, node_size = 3000, font_size = 8)
+networkx.draw_networkx_edge_labels(T, pos, edge_labels = edge_labels)
 plt.show()
+
+
+# creating tree by using library
+#from sklearn import tree
+#from sklearn.tree import DecisionTreeClassifier
+#import matplotlib.pyplot as plt
+#import sys
+
+#dtree = DecisionTreeClassifier()
+#dtree = dtree.fit(iris.data.features, iris.data.targets)
+
+#tree.plot_tree(dtree, feature_names = list(iris.data.features))
+#plt.savefig('decision_tree_plot.png')
