@@ -54,3 +54,5 @@ get'), ('0_root', '30_target'), ('0_root', '31_target'), ('0_root', '32_target')
 oot', '4_target'), ('4_target', '3_root'), ('3_root', '5_target')]
 
 FIXED: need to adjust nodes connections
+
+because they all the outcomes have the same amount of istances, the algorithm select the first class that occurs, i.e. 'Iris-setosa'
