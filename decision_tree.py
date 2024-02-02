@@ -130,26 +130,47 @@ def plot_tree(decision_tree, target, counter): # where target is the list of the
             T.add_edge(root_id, node_id, label = decision_tree.branch.label[i])
 
     return root_id, counter
-        
-#testing data #TODO must be done on training set and test set
-#def test_dataset(decision_tree, test_data):
-    
+
+
+# testing data #TODO must be done on training set and test set
+def test_tree(decision_tree, test_data, target):
+    counter = 0
+    total_test_length = len(test_data)
+    for i in range(0, total_test_length):
+        extracted_row = test_data.head(1)
+        test_data = test_data.drop(index[i]) # removing tested rows from dataset
+        if tree_precision(decision_tree, extracted_row, target):
+            counter += 1
+    return counter/total_test_length
+
+# calculating tree precision on a single row
+def tree_precision(tree, row, target):
+    for i in range(0, len(tree.branch.label)):
+        if list(row[tree.attribute_name])[0] == tree.branch.label[i]:
+            if tree.branch.subtree[i] in target: # TODO target must be a list
+                # checking if test data target is equal to decision tree one
+                if list(row[list(row)[-1]])[0] == tree.branch.subtree[i]:
+                    return true
+                else:
+                    return false
+            else:
+                tree_decision(tree.branch.subtree[i], row, target)
+
 
 
 # TODO add this part into another file. Tree class definitions must be in a separate file and every test for dataset must be done in a different file
 iris = fetch_ucirepo(id=53)
+
 #shuffle rows of dataframe
 shuffled_dataset = iris.data.original.sample(frac = 1, random_state = 42)
-#extracting test data
+extracting test data
 rows_to_extract = 30
 test_data = shuffled_dataset.head(rows_to_extract)
 dataset = shuffled_dataset.drop(test_data.index)
-print(len(dataset))
-print(len(test_data))
-
-# creating tree
-#decision_tree = DecisionTree(dataset, 100, 0) # (dataset, max tree depth, lower bound of examples)
 """
+# creating tree
+decision_tree = DecisionTree(dataset, 100, 0) # (dataset, max tree depth, lower bound of examples)
+
 #checking if the tree is empty or not
 if decision_tree.__dict__:
     # plotting tree
