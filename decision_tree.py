@@ -26,6 +26,8 @@ class DecisionTree:
     def __init__(self, examples, P, M): # note examples input must be like iris.data
         if M > len(examples):
             return print("Error: lower bound exceedes dataset dimensions")
+        elif P < 1:
+            return print("Error: cannot create a tree of depth that is less than 1")
         self.min_examples = M
         self.max_depth = P
         self.depth = 1
@@ -132,29 +134,37 @@ def plot_tree(decision_tree, target, counter): # where target is the list of the
     return root_id, counter
 
 
-# testing data #TODO must be done on training set and test set
+# testing data # must be done on training set and test set
 def test_tree(decision_tree, test_data, target):
     counter = 0
     total_test_length = len(test_data)
-    for i in range(0, total_test_length):
+    for i in test_data.index: # gives the ids of the dataset rows
         extracted_row = test_data.head(1)
-        test_data = test_data.drop(index[i]) # removing tested rows from dataset
+        test_data = test_data.drop(index = [i]) # removing tested rows from dataset
         if tree_precision(decision_tree, extracted_row, target):
             counter += 1
     return counter/total_test_length
 
 # calculating tree precision on a single row
 def tree_precision(tree, row, target):
+    # checking if the root attribute value in case we chose a tree of depth 1 (i.e. the tree is only a leaf)
+    if tree == list(row[list(row)[-1])[0]:
+        return True
+    else:
+        return False
+    # confronting the tree outcome with the training/test example
     for i in range(0, len(tree.branch.label)):
         if list(row[tree.attribute_name])[0] == tree.branch.label[i]:
+            # checking if the branch is connected to a leaf
             if tree.branch.subtree[i] in target: # TODO target must be a list
                 # checking if test data target is equal to decision tree one
                 if list(row[list(row)[-1]])[0] == tree.branch.subtree[i]:
-                    return true
+                    return True
                 else:
-                    return false
+                    return False
+            # ... or to a node
             else:
-                tree_decision(tree.branch.subtree[i], row, target)
+                tree_precision(tree.branch.subtree[i], row, target)
 
 
 
@@ -163,14 +173,22 @@ iris = fetch_ucirepo(id=53)
 
 #shuffle rows of dataframe
 shuffled_dataset = iris.data.original.sample(frac = 1, random_state = 42)
-extracting test data
-rows_to_extract = 30
+# extracting test data
+rows_to_extract = 60
 test_data = shuffled_dataset.head(rows_to_extract)
 dataset = shuffled_dataset.drop(test_data.index)
-"""
-# creating tree
-decision_tree = DecisionTree(dataset, 100, 0) # (dataset, max tree depth, lower bound of examples)
 
+# creating tree
+decision_tree = DecisionTree(dataset, 1, 89) # (dataset, max tree depth, lower bound of examples)
+
+# testing tree
+# with test data
+# TODO
+# with training data
+# TODO
+print(test_tree(decision_tree.root, test_data, list(shuffled_dataset[list(shuffled_dataset)[-1]].drop_duplicates())))
+
+"""
 #checking if the tree is empty or not
 if decision_tree.__dict__:
     # plotting tree
