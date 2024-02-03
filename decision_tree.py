@@ -147,11 +147,13 @@ def test_tree(decision_tree, test_data, target):
 
 # calculating tree precision on a single row
 def tree_precision(tree, row, target):
+    """
     # checking if the root attribute value in case we chose a tree of depth 1 (i.e. the tree is only a leaf)
-    if tree == list(row[list(row)[-1])[0]:
+    if tree == list(row[list(row)[-1]])[0] and tree in target:
         return True
     else:
         return False
+    """
     # confronting the tree outcome with the training/test example
     for i in range(0, len(tree.branch.label)):
         if list(row[tree.attribute_name])[0] == tree.branch.label[i]:
@@ -174,21 +176,19 @@ iris = fetch_ucirepo(id=53)
 #shuffle rows of dataframe
 shuffled_dataset = iris.data.original.sample(frac = 1, random_state = 42)
 # extracting test data
-rows_to_extract = 60
+rows_to_extract = 30# 60
 test_data = shuffled_dataset.head(rows_to_extract)
 dataset = shuffled_dataset.drop(test_data.index)
 
 # creating tree
-decision_tree = DecisionTree(dataset, 1, 89) # (dataset, max tree depth, lower bound of examples)
+decision_tree = DecisionTree(dataset, 100, 0) # (dataset, max tree depth, lower bound of examples)
 
 # testing tree
 # with test data
-# TODO
-# with training data
-# TODO
 print(test_tree(decision_tree.root, test_data, list(shuffled_dataset[list(shuffled_dataset)[-1]].drop_duplicates())))
+# with training data
+print(test_tree(decision_tree.root, dataset.head(rows_to_extract), list(shuffled_dataset[list(shuffled_dataset)[-1]].drop_duplicates())))
 
-"""
 #checking if the tree is empty or not
 if decision_tree.__dict__:
     # plotting tree
@@ -207,4 +207,3 @@ if decision_tree.__dict__:
     plt.show()
 else:
     print("Error: cannot plot an empty tree")
-"""
