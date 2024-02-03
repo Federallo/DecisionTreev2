@@ -3,12 +3,13 @@ from ucimlrepo import fetch_ucirepo
 import pandas as pd
 
 # other libraries
-import math
 import networkx
+import math
 import matplotlib.pyplot as plt
 
 # import custom libraries
 from tree_elements import Branch, Node
+from plot_tree import plot_tree
 
 # defining the decision tree data structure 
 class DecisionTree:
@@ -101,28 +102,6 @@ class DecisionTree:
         return filtered_examples
 
 
-#plotting tree
-T = networkx.MultiGraph()
-# defining plotting tree function
-def plot_tree(decision_tree, target, counter): # where target is the list of the possible dataset's targets
-    # adding unique identifiers in order to have separate nodes and branches
-    root_id = f"{counter}_root"
-    T.add_node(root_id, label = decision_tree.attribute_name)
-    counter += 1
-    for i in range(len(decision_tree.branch.subtree)):
-        # add directly target name if the are no subtrees
-        if decision_tree.branch.subtree[i] in target:
-            target_id = f"{counter}_target"
-            T.add_node(target_id, label = decision_tree.branch.subtree[i])
-            #T.add_edge(decision_tree.attribute_name, decision_tree.branch.subtree[i], weight = decision_tree.branch.label[i])
-            T.add_edge(root_id, target_id, label = decision_tree.branch.label[i])
-            counter += 1
-        # recursive call for the subtrees
-        else:
-            node_id, counter = plot_tree(decision_tree.branch.subtree[i], target, counter) # keeping track of counter in order to have separate nodes
-            T.add_edge(root_id, node_id, label = decision_tree.branch.label[i])
-
-    return root_id, counter
 
 
 # testing data # must be done on training set and test set
@@ -183,8 +162,10 @@ print(test_tree(decision_tree.root, dataset.head(rows_to_extract), list(shuffled
 #checking if the tree is empty or not
 if decision_tree.__dict__:
     # plotting tree
+    T = networkx.MultiGraph()
+    # plotting tree
     counter_start = 0 # setting the counter to distinguish nodes and branches
-    plot_tree(decision_tree.root, list(dataset[list(dataset)[-1]].drop_duplicates()), counter_start)
+    plot_tree(decision_tree.root, list(dataset[list(dataset)[-1]].drop_duplicates()), counter_start, T)
 
 
     # printing tree
