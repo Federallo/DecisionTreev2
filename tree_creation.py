@@ -9,13 +9,13 @@ from tree_testing import test_tree
 import networkx
 import matplotlib.pyplot as plt
 
-def create_tree(dataset_id, test_amount, tree_max_depth, examples_lower_bound):
+def create_tree(dataset_id, test_amount_examples, tree_max_depth, examples_lower_bound):
     iris = fetch_ucirepo(id=dataset_id)
 
     #shuffle rows of dataframe
     shuffled_dataset = iris.data.original.sample(frac = 1, random_state = 42)
     # extracting test data
-    test_data = shuffled_dataset.head(test_amount)
+    test_data = shuffled_dataset.head(test_amount_examples)
     dataset = shuffled_dataset.drop(test_data.index)
 
     # creating tree
@@ -25,7 +25,7 @@ def create_tree(dataset_id, test_amount, tree_max_depth, examples_lower_bound):
     # with test data
     print(test_tree(decision_tree.root, test_data, list(shuffled_dataset[list(shuffled_dataset)[-1]].drop_duplicates())))
     # with training data
-    print(test_tree(decision_tree.root, dataset.head(rows_to_extract), list(shuffled_dataset[list(shuffled_dataset)[-1]].drop_duplicates())))
+    print(test_tree(decision_tree.root, dataset.head(test_amount_examples), list(shuffled_dataset[list(shuffled_dataset)[-1]].drop_duplicates())))
 
     #checking if the tree is empty or not
     if decision_tree.__dict__:
