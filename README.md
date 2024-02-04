@@ -5,7 +5,7 @@ Before running the code, please install dataset's repo and the other dependencie
 ```
 pip install pandas ucimlrepo networkx PyQt5
 ```
-All dataset are made by Dataframes from pandas.\
+All dataset are made by Dataframes from pandas.
 
 Here is a little description of single py files:
 - tree_elements.py: defines the nodes and the branches of the tree
