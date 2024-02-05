@@ -56,3 +56,6 @@ oot', '4_target'), ('4_target', '3_root'), ('3_root', '5_target')]
 FIXED: need to adjust nodes connections
 
 because they all the outcomes have the same amount of istances, the algorithm select the first class that occurs, i.e. 'Iris-setosa'
+
+05/02/2024
+TODO: must be added a method of pruning for uncompleted examples
