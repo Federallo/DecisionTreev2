@@ -8,7 +8,6 @@ from tree_elements import Branch, Node
 
 # defining the decision tree data structure 
 class DecisionTree:
-
     # initialising decision tree
     def __init__(self, examples, P, M): # note examples input must be like iris.data
         if M > len(examples):
@@ -17,29 +16,27 @@ class DecisionTree:
             return print("Error: cannot create a tree of depth that is less than 1")
         self.min_examples = M
         self.max_depth = P
-        self.depth = 1
-        self.root = self.decision_tree_learning(examples, list(examples)[:-1], {}) # parents_examples is empty because we are starting from an empty tree
+        self.root = self.decision_tree_learning(examples, list(examples)[:-1], {}, 1) # parents_examples is empty because we are starting from an empty tree
 
     # defining recursive decision tree learning algorithm
-    def decision_tree_learning(self, examples, attributes, parent_examples):
+    def decision_tree_learning(self, examples, attributes, parent_examples, current_depth):
         # checking if there are no examples left or the number of examples are less than a lower bound         
         if examples.empty or len(examples) < self.min_examples:
             return self.plurality_value(parent_examples[[list(parent_examples)[-1]]])
         # checking if the current examples have the same outcome (i.e. the dataset is pure)or the tree have reached a certain depth 
-        elif len(list(examples[list(examples)[-1]].value_counts())) == 1 or self.depth >= self.max_depth:
+        elif len(list(examples[list(examples)[-1]].value_counts())) == 1 or current_depth >= self.max_depth:
             return list(examples[list(examples)[-1]])[0] # gives the only target in common between the examples
         # checking if there are no attributes left in the examples
         elif not attributes:
             return self.plurality_value(examples[[list(examples)[-1]]])
         # defining the most important attribute and adding it to the tree as a node
         else:
-            self.depth += 1
             A = self.max_importance(examples, attributes) # here we choose the most important attribute among the others
             tree = Node(list(A)[0]) # list(A)[0] gives the attribute name
             attributes.remove(list(A)[0]) # remoivng the attribute with highest information gain from the list
             for value in list(A[list(A)[0]].drop_duplicates()): # gives the set of attribute values
                 exs = self.update_examples(examples, A, value) # selects the examples which have the attribute's value 'value'
-                subtree = self.decision_tree_learning(exs, attributes, examples)
+                subtree = self.decision_tree_learning(exs, attributes, examples, current_depth + 1)
                 tree.branch.label.append(value)
                 tree.branch.subtree.append(subtree)
 
