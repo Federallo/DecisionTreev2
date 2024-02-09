@@ -1,4 +1,6 @@
 \documentclass{article}
+\usepackage{multirow}% for tables
+\usepackage{float}% for text under tables
 \usepackage{amsmath}% amsmath for equations
 \usepackage{hyperref}% for links
 \hypersetup{
@@ -52,9 +54,81 @@ Per la realizzazione dell'albero, sono stati realizzati 5 files differenti:
 	\item \texttt{tree\_testing.py}: definisce le funzioni che permetto il calcolo della precisione dell'albero (\texttt{test\_tree} e \texttt{tree\_precision}).
 \end{itemize}
 {\Large \textbf{3. Analisi dei risultati}}\\
-I risultati dei vari dataset sono stati i seguenti\\
+Nota: per scegliere \texttt{M} è stato analizzata la cardinalità degli insiemi di esempi dei sottoalberi di ciascun dataset\\
 \\
 {\Large \textbf{{\large{3}}.{\small{1}}. Dataset Iris}}\\
-
-
+Nel caso del dataset Iris si hanno i seguenti risultati:
+\begin{table}[H]
+	\makebox[\linewidth]{
+		\resizebox{10cm}{!}{
+			\begin{tabular}{||c|c|c|c|c||}
+				\hline
+				Split & P & M & training precision & test precision \\
+				\hline
+				30/150 & 3 & 0 & 0.8 & 0.7 \\
+				\hline 
+				30/150 & 2 & 0 & 1.0 & 0.8667 \\
+				\hline
+				30/150 & 1 & 0 & 0.433333 & 0.3333 \\
+				\hline
+				30/150 & 3 & 50 & 0.43333 & 0.3333 \\
+				\hline
+				30/150 & 3 & 3 & 0.66667 & 0.5 \\
+				\hline
+				30/150 & 3 & 2 & 0.86667 & 0.6667 \\
+				\hline
+				30/150 & 2 & 2 & 0.9333 & 0.66667 \\
+				\hline
+			\end{tabular}}}
+\end{table}
+Dalla seguente tabella si possono notare i seguenti comportamenti:
+\begin{itemize}
+	\item nei casi P=1 M=0 e P=3 M=50 accade la stessa cosa in quanto vengono eliminati tutti i sotto-esempi, i quali variano tra [1,11]. Perciò si forma un albero di profondità 1.
+	\item riducendo di 1 la profondità dell'albero aumenta la precisione dell'albero, mentre aumentare il limite minimo dell'insieme di esempi diminuisce la precisione.
+	\item M influenza soprattutto la precisione del training (casi P=2 M=3 e P=2 M=2).
+\end{itemize}
+{\Large \textbf{{\large{3}}.{\small{2}}. Dataset Heart Disease}}\\
+Heart Diesase, rispetto a Iris, presenta più attributi. Nonostatnte ciò, l'albero ha le stesse dimensioni: gli attributi che non sono stati utilizzati, non sono seriviti per la classificazione, e quindi si sono presentati casi in cui gli esempi hanno stesso target.
+\begin{table}[H]
+	\makebox[\linewidth]{
+		\resizebox{10cm}{!}{
+			\begin{tabular}{||c|c|c|c|c||}
+				\hline
+				Split & P & M & training precision & test precision \\
+				\hline
+				76/299 & 3 & 0 & 0.78947368 & 0.21052632 \\
+				\hline 
+				76/299 & 2 & 0 & 0.960526316 & 0.31578947 \\
+				\hline
+				76/299 & 1 & 0 & 0.6842105263 & 0.592105263 \\
+				\hline
+				76/299 & 3 & 50 & 0.61842105263 & 0.25 \\
+				\hline
+				76/299 & 3 & 3 & 0.60526315789 & 0.18421053 \\
+				\hline
+				76/299 & 3 & 2 & 0.77631578947 & 0.28947368 \\
+				\hline
+			\end{tabular}}}
+\end{table}
+Anche in questo caso, ridurre la profondità dell'albero di una unità ne aumenta la precisione.\\
+\\
+{\Large \textbf{{\large{3}}.{\small{3}}. Dataset Wine}}\\
+Il Wine dataset presenta molti attribute che non vengono utilizzati come nel caso precedente, e i sottoalberi hanno solo due foglie.
+\begin{table}[H]
+	\makebox[\linewidth]{
+		\resizebox{10cm}{!}{
+			\begin{tabular}{||c|c|c|c|c||}
+				\hline
+				Split & P & M & training precision & test precision \\
+				\hline
+				34/178 & 3 & 0 & 0.941176 & 0.1470588 \\
+				\hline 
+				76/299 & 2 & 0 & 1.0 & 0.176470588 \\
+				\hline
+				76/299 & 1 & 0 & 0.3529411764 & 0.3529411764 \\
+				\hline
+			\end{tabular}}}
+\end{table}
+Siccome i sottoalberi hanno solo due foglie, non avrebbe senso importare M in quanto sarebbe come impostare P a 2.
+Come per il dataset precedente, anche qui non sono stati usati tutti gli attributi.
 \end{document}
