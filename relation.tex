@@ -130,5 +130,12 @@ Il Wine dataset presenta molti attribute che non vengono utilizzati come nel cas
 			\end{tabular}}}
 \end{table}
 Siccome i sottoalberi hanno solo due foglie, non avrebbe senso importare M in quanto sarebbe come impostare P a 2.
-Come per il dataset precedente, anche qui non sono stati usati tutti gli attributi.
+Come per il dataset precedente, anche qui non sono stati usati tutti gli attributi.\\
+\\
+{\Large \textbf{{\large{4}}. Conclusioni}}\\
+In generale, apportare modifiche alla creazione dell'albero limitando la cardinalità dell'insieme di esempi o la profondità dell'albero ha dato due risultati differenti:
+\begin{itemize}
+	\item Ridurre la profondità dell'albero, anche di 1 unità, aumenta la precisione dell'albero. Ciò è dovuto soprattutto al fatto che, più è profondo l'albero e più si ha noise nel dataset, e quindi si può avere un caso di overfitting. L'overfitting, in generale, si presenta quando la quantità di attributi aumenta nel dataset: si può notare dai risultati di Wine e Iris.
+	\item D'altra parte, cambiare la minima cardinalità porta solo a un peggioramento della precisione dell'albero. Siccome in tutti i dataset si ha uno split su pochi esempi, ciò può significare che quelli usati per creare i nodi rappresentano noise.
+\end{itemize}
 \end{document}
