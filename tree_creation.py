@@ -10,10 +10,10 @@ import networkx
 import matplotlib.pyplot as plt
 
 def create_tree(dataset_id, test_amount_examples, tree_max_depth, examples_lower_bound):
-    iris = fetch_ucirepo(id=dataset_id)
+    dataset = fetch_ucirepo(id=dataset_id)
 
     #shuffle rows of dataframe
-    shuffled_dataset = iris.data.original.sample(frac = 1, random_state = 42)
+    shuffled_dataset = dataset.data.original.sample(frac = 1, random_state = 42)
     # extracting test data
     test_data = shuffled_dataset.head(test_amount_examples)
     dataset = shuffled_dataset.drop(test_data.index)
