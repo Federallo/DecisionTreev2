@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 # other libraries
 import math
@@ -10,6 +11,7 @@ from tree_elements import Branch, Node
 class DecisionTree:
     # initialising decision tree
     def __init__(self, examples, P, M): # note examples input must be like iris.data
+        # TODO find a better implementation
         if M > len(examples):
             return print("Error: lower bound exceedes dataset dimensions")
         elif P < 1:
@@ -31,7 +33,7 @@ class DecisionTree:
             return self.plurality_value(examples[[list(examples)[-1]]])
         # defining the most important attribute and adding it to the tree as a node
         else:
-            A = self.max_importance(examples, attributes) # here we choose the most important attribute among the others
+            A, branch_weights = self.max_importance(examples, attributes) # here we choose the most important attribute among the others
             tree = Node(list(A)[0]) # list(A)[0] gives the attribute name
             attributes.remove(list(A)[0]) # remoivng the attribute with highest information gain from the list
             for value in list(A[list(A)[0]].drop_duplicates()): # gives the set of attribute values
@@ -39,6 +41,7 @@ class DecisionTree:
                 subtree = self.decision_tree_learning(exs, attributes, examples, current_depth + 1)
                 tree.branch.label.append(value)
                 tree.branch.subtree.append(subtree)
+                tree.branch.weight.append(branch_weights.loc[branch_weights[list(A)[0]] == value, 'count'].values[0])
 
         return tree
                 
@@ -61,20 +64,27 @@ class DecisionTree:
         information_gain = -1 # we set to -1 because the information gain value lise withnin the range 0-1. By doing so. We set the information gain of the first attribute
                               # in the for cycle
         # determining the attribute with highest information gain
-        for attribute in list(examples[:-1]): # :-1 to indicate only features
+        for attribute in list(examples)[:-1]: # :-1 to remove target and leave only features #FIXME must be adjusted in the main also
+            # getting values frequencies and the amount of missing values that needs to be considered as they have all of them
+            frequencies, missing_add = self.list_of_frequencies(examples[[attribute]])
+            # removing missing value from attribute
+            examples = examples.dropna(subset=[attribute])
             # computing the right member of information gain function
-            right_member = 0
+            right_member = 0            
             for i in list(examples[attribute].drop_duplicates()):
-                right_member -= len(examples[examples[attribute] == i])/len(examples[list(examples)[:-1]]) \
-                    *self.entropy(examples[examples[attribute] == i])
+                right_member -= (len(examples[examples[attribute] == i])+missing_add)/(len(examples[list(examples)[:-1]])+missing_add) \
+                    *self.entropy(examples[examples[attribute] == i])\
+                    *frequencies.loc[frequencies[attribute] == i, 'count'].values[0] # computing the information gain of each attribute
 
-            current = entropy_set + right_member # computing the information gain of each attribute
 
+            current = entropy_set + right_member
+            
             if current > information_gain and attribute in list_attributes:
                 information_gain = current
                 current_attribute = examples[[attribute]]
+                current_frequencies = frequencies
 
-        return current_attribute
+        return current_attribute, current_frequencies
     
     # defining the entropy of a set
     def entropy(self, examples_set):
@@ -93,3 +103,11 @@ class DecisionTree:
 
         return filtered_examples
 
+    # defining a function that gets each value frequency
+    def list_of_frequencies(self, attribute):
+        values_extra = 0 # counter for information gain for every single attribute
+        value_counts = attribute.value_counts().reset_index()
+        value_counts.columns = [f'{list(attribute)[0]}', f'count']
+        value_counts['count'] = value_counts['count']/len(attribute)
+
+        return value_counts, list(attribute.isnull().sum())[0]

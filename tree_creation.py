@@ -14,13 +14,24 @@ def create_tree(dataset_id, test_amount_examples, tree_max_depth, examples_lower
 
     #shuffle rows of dataframe
     shuffled_dataset = iris.data.original.sample(frac = 1, random_state = 42)
+
+    #adjusting the dataset in case it has missing values
+
+
     # extracting test data
     test_data = shuffled_dataset.head(test_amount_examples)
     dataset = shuffled_dataset.drop(test_data.index)
 
     # creating tree
     decision_tree = DecisionTree(dataset, tree_max_depth, examples_lower_bound) # (dataset, max tree depth, lower bound of examples)
-
+    """
+    example_attribute = shuffled_dataset[list(shuffled_dataset)[1]].value_counts()
+    value_counts = example_attribute.reset_index()
+    value_counts.columns = [f'{list(shuffled_dataset)[1]}', f'count']
+    print(list(value_counts[value_counts['make']=='audi'])[1])
+    print(example_attribute.get(list(shuffled_dataset[list(shuffled_dataset)[1]].unique())[1]))
+    print(example_attribute)
+    """
     # testing tree
     # with test data
     print("test data precision:")

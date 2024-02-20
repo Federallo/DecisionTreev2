@@ -3,6 +3,7 @@ class Branch:
     def __init__(self):
         self.label = []
         self.subtree = []
+        self.weight = []
 
 # defining tree nodes data structure
 class Node:
