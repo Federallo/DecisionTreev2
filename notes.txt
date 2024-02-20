@@ -59,3 +59,10 @@ because they all the outcomes have the same amount of istances, the algorithm se
 
 05/02/2024
 TODO: must be added a method of pruning for uncompleted examples
+
+18/02/2024
+shuffled_dataset[list(shuffled_dataset)[1]].value_counts() ==> gives the list of different values of a column with their amount
+example_attribute.get(list(shuffled_dataset[list(shuffled_dataset)[1]].unique())[1]) ==> returns the amount of a single value in the column
+
+19/02/2024
+dataframe.dropna(subset=[column_name]) ==> removes missing values
