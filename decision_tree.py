@@ -61,7 +61,7 @@ class DecisionTree:
         information_gain = -1 # we set to -1 because the information gain value lise withnin the range 0-1. By doing so. We set the information gain of the first attribute
                               # in the for cycle
         # determining the attribute with highest information gain
-        for attribute in list(examples[:-1]): # :-1 to indicate only features
+        for attribute in list(examples)[:-1]: # :-1 to indicate only features
             # computing the right member of information gain function
             right_member = 0
             for i in list(examples[attribute].drop_duplicates()):
