@@ -23,7 +23,7 @@ Il seguente elaborato mostra la realizzazione di un albero decisione partendo da
 (di Russell e Norvig (edizione 2020)), al quale viene modificato il passo base dello pseudocodice in modo che la ricorsione viene interrotta se la profondità è maggiore 
 di un intero P assegnato oppure se il numero di esempi in examples è minore di un intero M assegnato.\\
 \\
-Lo pseudocodice preso in considerazione utilizza come metodi di inserimento di nodi all'interno dell'albero i concetti di entropia e di information gain della teoria della teoria
+Lo pseudocodice preso in considerazione utilizza come metodi di inserimento dei nodi all'interno dell'albero i concetti di entropia e di information gain, entrambi della teoria
 dell'informazione.\\
 \\
 {\Large \textbf{{\large{1}}.{\small{1}}. Hardware e sistema operativo utilizzati}}\\
@@ -32,29 +32,29 @@ Il codice è stato eseguito su un pc fisso con processore i5-10600k e 32gb di ra
 {\Large \textbf{2. Creazione dell'albero di decisione}}\\
 Per realizzare l'albero di decisione viene estratto il dataset dalla libreria python \texttt{ucimlrepo} tramite id (per esempio l'iris ha come id il 53). Successivamente, viene eseguito uno
 shuffle per randomizzare gli elementi all'interno: essendo gli esempi ordinati in base al target, ciò permette di dividere il seguente dataset in training e test 
-senza che quest'ultimo abbia istanze di un solo target.\\
-Una volta ottenuti i due dataset, viene chiamata la funzione che realizza l'albero: ricorsivamente, viene analizzato ciascun esempio in modo tale da determinare quale attributo
+in modo da evitare che quest'ultimo abbia istanze di un solo target.\\
+Una volta ottenuti i due dataset, viene chiamata la funzione che realizza l'albero: ricorsivamente, vengono analizzati tutti gli esempi in modo tale da determinare quale attributo
 inserire prima come nodo dell'albero, oppure viene aggiornata la frontiera aggiungendo foglie all'albero.\\
 Ottenuto l'albero di decisione, viene disegnato graficamente tramite l'utilizzo della libreria \texttt{networkx} e ne viene calcolata la precisione testando sia il training dataset
 che il test dataset.\\
 \\
 I dataset utilizzati sono stati reperiti da \href{https://archive.ics.uci.edu/}{UCI Machine Learning Repository}:
 \begin{itemize}
-	\item \href{https://archive.ics.uci.edu/dataset/53/iris}{Iris}: classifica le tipologie di iris in base a una serie di attributi. Le variabili sono \texttt{sepal length}, \texttt{sepal width}, \texttt{petal length}, \texttt{sepal length} e \texttt{class} (setosa, versicolor, virginica).
+	\item \href{https://archive.ics.uci.edu/dataset/53/iris}{Iris}: classifica le tipologie di iris in base a una serie di attributi. Le variabili sono \texttt{petal width}, \texttt{sepal width}, \texttt{petal length}, \texttt{sepal length} e \texttt{class} (setosa, versicolor, virginica).
 	\item \href{https://archive.ics.uci.edu/dataset/519/heart+failure+clinical+records}{Heart failure}: \texttt{age}, \texttt{anemia}, \texttt{creatinine\_phosphofinase} (indica il livello dell'enzima CPK nel sangue), \texttt{diabetes}, \texttt{ejection\_fraction} (percentuale di sangue che esce dal cuore a ogni contrazione), \texttt{high\_blood\_pressure}, \texttt{platelets}, \texttt{serum\_creatinine} (livello di siero di creatinine nel sangue), \texttt{serum\_sodium} (livello di siero di sodio nel sangue), \texttt{sex}, \texttt{smoking}, \texttt{time} (periodo di follow-up), \texttt{death\_event} (se il paziente muore durante il periodo follow-up (target)).
 	\item \href{https://archive.ics.uci.edu/dataset/109/wine}{Wine}: \texttt{Alcohol}, \texttt{Maliacid}, \texttt{Ash}, \texttt{Alcalinity\_of\_ash}, \texttt{Magnesium}, \texttt{Total\_phenols}, \texttt{Flavanoids}, \texttt{Nonflavanoid\_phenols}, \texttt{Proathocyanins}, \texttt{Color\_intensity}, \texttt{Hue}, \texttt{0D280\_0D315\_of\_diluted\_wines}, \texttt{Proline}, \texttt{class} (tipo di vino).
 \end{itemize}
 Per la realizzazione dell'albero, sono stati realizzati 5 files differenti:
 \begin{itemize}
 	\item \texttt{main.py}: si seleziona l'id del dataset, lo split train/test, la massima profondità dell'albero (\texttt{P}) e il numero minimo di examples (\texttt{M}). Successivamente, chiama la funzione che crea l'albero, lo disegna e stampa la precisione (\texttt{create\_tree}).
-	\item \texttt{tree\_creation.py}: definisce la funzione \texttt{create\_tree} in cui viene inizializzati i dataset e creato l'albero di decisione tramite l'istanziazione di una variabile \texttt{DecisionTree}. Vengono inoltre calcolate e stampate le precisioni tramite la chiamata alla funzione \texttt{test\_tree}, e viene disegnato l'albero tramite la chiamata alla funzione \texttt{plot\_tree} e rappresenato graficamente grazie alla libreria \texttt{matplotlib}.
+	\item \texttt{tree\_creation.py}: definisce la funzione \texttt{create\_tree} in cui vengono inizializzati i dataset (training e test) e creato l'albero di decisione tramite l'istanziazione di una variabile \texttt{DecisionTree}. Vengono inoltre calcolate e stampate le precisioni tramite la chiamata alla funzione \texttt{test\_tree}, e viene disegnato e rappresentato graficamente (grazie alla libreria \texttt{matplotlib}) l'albero tramite la chiamata alla funzione \texttt{plot\_tree}.
 	\item \texttt{decision\_tree.py}: definisce la classe \texttt{DecisionTree}.
 	\item \texttt{tree\_elements.py}: definisce le classi \texttt{Branch} e \texttt{Node} necessarie per la realizzazione dell'albero di decisione.
 	\item \texttt{plot\_tree.py}: definisce la funzione che disegna l'albero di decisione.
 	\item \texttt{tree\_testing.py}: definisce le funzioni che permetto il calcolo della precisione dell'albero (\texttt{test\_tree} e \texttt{tree\_precision}).
 \end{itemize}
 {\Large \textbf{3. Analisi dei risultati}}\\
-Nota: per scegliere \texttt{M} è stato analizzata la cardinalità degli insiemi di esempi dei sottoalberi di ciascun dataset\\
+Nota: per scegliere \texttt{M} è stata analizzata la cardinalità degli insiemi di esempi dei sottoalberi del decision tree\\
 \\
 {\Large \textbf{{\large{3}}.{\small{1}}. Dataset Iris}}\\
 Nel caso del dataset Iris si hanno i seguenti risultati:
@@ -83,12 +83,12 @@ Nel caso del dataset Iris si hanno i seguenti risultati:
 \end{table}
 Dalla seguente tabella si possono notare i seguenti comportamenti:
 \begin{itemize}
-	\item nei casi P=1 M=0 e P=3 M=50 accade la stessa cosa in quanto vengono eliminati tutti i sotto-esempi, i quali variano tra [1,11]. Perciò si forma un albero di profondità 1.
-	\item riducendo di 1 la profondità dell'albero aumenta la precisione dell'albero, mentre aumentare il limite minimo dell'insieme di esempi diminuisce la precisione.
+	\item nei casi P=1 M=0 e P=3 M=50 accade la stessa cosa in quanto vengono eliminati gli stessi sotto-esempi, le cui dimensioni variano tra [1,11]. Perciò si forma sempre un albero di profondità 1.
+	\item ridurre di 1 la profondità dell'albero ne aumenta la precisione sia nel caso del training che nel caso del test; mentre aumentare il limite minimo dell'insieme di esempi diminuisce la precisione.
 	\item M influenza soprattutto la precisione del training (casi P=2 M=3 e P=2 M=2).
 \end{itemize}
 {\Large \textbf{{\large{3}}.{\small{2}}. Dataset Heart Disease}}\\
-Heart Diesase, rispetto a Iris, presenta più attributi. Nonostatnte ciò, l'albero ha le stesse dimensioni: gli attributi che non sono stati utilizzati, non sono seriviti per la classificazione, e quindi si sono presentati casi in cui gli esempi hanno stesso target.
+Heart Diesase, rispetto a Iris, presenta più attributi e, nonostatnte ciò, l'albero ha le stesse dimensioni: gli attributi che non sono stati utilizzati non sono seriviti per la classificazione, e quindi ciò significa che si sono presentati casi in cui gli esempi hanno avuto stesso target.
 \begin{table}[H]
 	\makebox[\linewidth]{
 		\resizebox{10cm}{!}{
@@ -113,7 +113,7 @@ Heart Diesase, rispetto a Iris, presenta più attributi. Nonostatnte ciò, l'alb
 Anche in questo caso, ridurre la profondità dell'albero di una unità ne aumenta la precisione.\\
 \\
 {\Large \textbf{{\large{3}}.{\small{3}}. Dataset Wine}}\\
-Il Wine dataset presenta molti attribute che non vengono utilizzati come nel caso precedente, e i sottoalberi hanno solo due foglie.
+Il Wine dataset presenta anch'esso molti attributi che non vengono utilizzati come nel caso precedente, e i sotto-alberi hanno solo due foglie.
 \begin{table}[H]
 	\makebox[\linewidth]{
 		\resizebox{10cm}{!}{
@@ -129,13 +129,13 @@ Il Wine dataset presenta molti attribute che non vengono utilizzati come nel cas
 				\hline
 			\end{tabular}}}
 \end{table}
-Siccome i sottoalberi hanno solo due foglie, non avrebbe senso importare M in quanto sarebbe come impostare P a 2.
+Siccome i sottoalberi hanno solo due foglie, non avrebbe senso impostare M in quanto sarebbe come impostare P a 2.
 Come per il dataset precedente, anche qui non sono stati usati tutti gli attributi.\\
 \\
 {\Large \textbf{{\large{4}}. Conclusioni}}\\
-In generale, apportare modifiche alla creazione dell'albero limitando la cardinalità dell'insieme di esempi o la profondità dell'albero ha dato due risultati differenti:
+In generale, apportare modifiche alla creazione dell'albero limitando la cardinalità dell'insieme di esempi o la profondità dell'albero, ha dato due risultati differenti:
 \begin{itemize}
-	\item Ridurre la profondità dell'albero, anche di 1 unità, aumenta la precisione dell'albero. Ciò è dovuto soprattutto al fatto che, più è profondo l'albero e più si ha noise nel dataset, e quindi si può avere un caso di overfitting. L'overfitting, in generale, si presenta quando la quantità di attributi aumenta nel dataset: si può notare dai risultati di Wine e Iris.
+	\item Ridurre la profondità dell'albero, anche se solo di 1 unità, aumenta la precisione dell'albero. Ciò è dovuto soprattutto al fatto che, più è profondo l'albero e più si ha noise nel dataset, e quindi si può avere un caso di overfitting. L'overfitting, in generale, si presenta quando la quantità di attributi aumenta nel dataset: si può notare dai risultati di Wine e Iris.
 	\item D'altra parte, cambiare la minima cardinalità porta solo a un peggioramento della precisione dell'albero. Siccome in tutti i dataset si ha uno split su pochi esempi, ciò può significare che quelli usati per creare i nodi rappresentano noise.
 \end{itemize}
 \end{document}
