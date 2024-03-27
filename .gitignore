@@ -2,3 +2,6 @@ __pycache__/
 relation.log
 relation.aux
 relation.out
+report.log
+report.aux
+report.out
