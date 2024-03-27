@@ -13,3 +13,25 @@ Here is a little description of single py files:
 - plot_tree.py: draws the tree
 - tree_creation: creates the tree and plots it
 - main: calls tree_creation and lets changes parameters of the tree like the dataset type, the max depth, the test/training split, ...
+
+To make the application work, please run main.py. The program will ask P, M, the training/test split and the dataset.
+In order to have the same results as the ones in the report, please use the following parameters:
+- for Iris
+    - P = 3, M = 0, split = 30
+    - P = 2, M = 0, split = 30
+    - P = 1, M = 0, split = 30
+    - P = 3, M = 50, split = 30
+    - P = 3, M = 3, split = 30
+    - P = 3, M = 2, split = 30
+    - P = 2, M = 2, split = 30
+- for Heart disease
+    - P = 3, M = 0, split = 76
+    - P = 2, M = 0, split = 76
+    - P = 1, M = 0, split = 76
+    - P = 3, M = 50, split = 76
+    - P = 3, M = 3, split = 76
+    - P = 3, M = 2, split = 76
+- for Wine
+    - P = 3, M = 0, split = 34
+    - P = 2, M = 0, split = 34
+    - P = 1, M = 0, split = 34
