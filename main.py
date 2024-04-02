@@ -25,7 +25,6 @@ def main():
 
 
 
-    test_amount_examples = 30
     create_tree(dataset_id, test_amount_examples, tree_max_depth, examples_lower_bound)
 
 if __name__ == '__main__':
