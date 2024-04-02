@@ -3,7 +3,11 @@ Decision tree algorithm based on R&N 2020: chapter 19.3, with the base step that
 Dataset for learning procedures are provided by [Fisher,R. A.. (1988). Iris. UCI Machine Learning Repository](https://doi.org/10.24432/C56C76). \
 Before running the code, please install dataset's repo and the other dependencies by running
 ```
-pip install pandas ucimlrepo networkx PyQt5
+pip install pandas ucimlrepo networkx PyQt5 certifi matplotlib
+```
+or
+```
+pip3 install pandas ucimlrepo networkx PyQt5 certifi matplotlib
 ```
 All dataset are made by Dataframes from pandas library.
 
@@ -14,7 +18,15 @@ Here is a little description of single py files:
 - tree_creation: creates the actual tree and plots it
 - main: calls tree_creation and and asks the user for the parameters in input
 
-To make the application work, please run main.py. The program will ask P, M, the training/test split and the dataset.
+To make the application work, please run main.py by pasting this command
+```
+python main.py
+```
+or
+```
+python3 main.py
+```
+The program will ask P, M, the training/test split and the dataset.
 In order to have the same results as the ones in the report, please use the following parameters:
 - for Iris
     - P = 3, M = 0, split = 30
