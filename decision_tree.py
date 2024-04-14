@@ -20,11 +20,14 @@ class DecisionTree:
 
     # defining recursive decision tree learning algorithm
     def decision_tree_learning(self, examples, attributes, parent_examples, current_depth):
-        # checking if there are no examples left or the number of examples are less than a lower bound         
+        # checking if there are no examples left or the number of examples are less than a lower bound        
         if examples.empty or len(examples) < self.min_examples:
             return self.plurality_value(parent_examples[[list(parent_examples)[-1]]])
-        # checking if the current examples have the same outcome (i.e. the dataset is pure)or the tree have reached a certain depth 
-        elif len(list(examples[list(examples)[-1]].value_counts())) == 1 or current_depth >= self.max_depth:
+        # checking if the tree have reached a certain depth
+        elif current_depth >= self.max_depth:
+            return self.plurality_value(examples[[list(examples)[-1]]])
+        # checking if the current examples have the same outcome (i.e. the dataset is pure)
+        elif len(list(examples[list(examples)[-1]].value_counts())) == 1:
             return list(examples[list(examples)[-1]])[0] # gives the only target in common between the examples
         # checking if there are no attributes left in the examples
         elif not attributes:
