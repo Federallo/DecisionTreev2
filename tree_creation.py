@@ -23,10 +23,10 @@ def create_tree(dataset_id, test_amount_examples, tree_max_depth, examples_lower
 
     # testing tree
     # with test data
-    print("test data precision:")
+    print("test data accuracy:")
     print(test_tree(decision_tree.root, test_data, list(shuffled_dataset[list(shuffled_dataset)[-1]].drop_duplicates())))
     # with training data
-    print("training data precision:")
+    print("training data accuracy:")
     print(test_tree(decision_tree.root, dataset.head(test_amount_examples), list(shuffled_dataset[list(shuffled_dataset)[-1]].drop_duplicates())))
 
     #checking if the tree is empty or not

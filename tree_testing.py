@@ -5,12 +5,12 @@ def test_tree(decision_tree, test_data, target):
     for i in test_data.index: # gives the ids of the dataset rows
         extracted_row = test_data.head(1)
         test_data = test_data.drop(index = [i]) # removing tested rows from dataset
-        if tree_precision(decision_tree, extracted_row, target):
+        if tree_accuracy(decision_tree, extracted_row, target):
             counter += 1
     return counter/total_test_length
 
-# calculating tree precision on a single row
-def tree_precision(tree, row, target):
+# calculating tree accuracy on a single row
+def tree_accuracy(tree, row, target):
     
     # checking if the root attribute value in case we chose a tree of depth 1 (i.e. the tree is only a leaf)
     if tree == list(row[list(row)[-1]])[0] and tree in target:
@@ -30,4 +30,4 @@ def tree_precision(tree, row, target):
                     return False
             # ... or to a node
             else:
-                tree_precision(tree.branch.subtree[i], row, target)
+                tree_accuracy(tree.branch.subtree[i], row, target)
